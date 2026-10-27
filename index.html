@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Cockpit v2.2 - Deep Black Gradient</title>
+    <title>Task Cockpit v2.3 - Quick Add Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         :root, [data-theme="crimson"] { 
@@ -140,7 +140,7 @@
         .color-picker-input::-webkit-color-swatch-wrapper { padding: 0; }
         .color-picker-input::-webkit-color-swatch { border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; }
 
-        /* PROGRESS BAR WITH NEON GRADIENT */
+        /* PROGRESS BAR */
         .top-progress-wrapper { margin: 12px 0 20px 0; background: var(--card-bg); border-radius: 10px; padding: 12px 18px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 8px; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .top-progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
         .top-progress-bar-bg { width: 100%; height: 7px; background: #000; border-radius: 4px; overflow: hidden; border: 1px solid var(--border-color); }
@@ -183,7 +183,7 @@
         .db-frog-progress-bg { height: 6px; background: #000; border-radius: 3px; overflow: hidden; margin-top: 6px; width: 100%; max-width: 350px; border: 1px solid var(--border-color); }
         .db-frog-progress-fill { height: 100%; }
 
-        /* 3-COLUMN CALENDAR & DRAG/DROP */
+        /* 3-COLUMN CALENDAR & QUICK ADD */
         .calendar-3col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; }
         .calendar-col { 
             background: var(--cal-bg); 
@@ -211,6 +211,43 @@
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 8px;
             letter-spacing: 0.5px;
+        }
+
+        .btn-col-quickadd {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--primary-glow);
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.75rem;
+            transition: all 0.2s;
+        }
+        .btn-col-quickadd:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 6px var(--border-glow);
+        }
+
+        .quick-add-box {
+            display: none;
+            gap: 6px;
+            margin-bottom: 10px;
+        }
+        .quick-add-box.open { display: flex; }
+        .quick-add-input {
+            flex-grow: 1;
+            background: var(--input-bg);
+            border: 1px solid var(--primary-color);
+            border-radius: 6px;
+            padding: 6px 10px;
+            color: var(--text-main);
+            font-size: 0.8rem;
+            outline: none;
+            box-shadow: 0 0 6px var(--border-glow);
         }
 
         .calendar-list { display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
@@ -478,15 +515,35 @@
 
                 <div class="calendar-3col-grid">
                     <div class="calendar-col" id="col-Mandag-onsdag" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'Mandag-onsdag')">
-                        <div class="calendar-col-title">Mandag - Onsdag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></div>
+                        <div class="calendar-col-title">
+                            <span>Mandag - Onsdag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></span>
+                            <button class="btn-col-quickadd" onclick="toggleQuickAdd('Mandag-onsdag')" title="Tilføj hurtig opgave/note"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <div class="quick-add-box" id="quickAdd-Mandag-onsdag">
+                            <input type="text" class="quick-add-input" placeholder="Hurtig opgave/note... (tryk Enter)" onkeydown="handleQuickAddKey(event, 'Mandag-onsdag')">
+                        </div>
                         <div class="calendar-list" id="cal-list-mon-wed"></div>
                     </div>
+
                     <div class="calendar-col" id="col-Torsdag" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'Torsdag')">
-                        <div class="calendar-col-title">Torsdag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></div>
+                        <div class="calendar-col-title">
+                            <span>Torsdag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></span>
+                            <button class="btn-col-quickadd" onclick="toggleQuickAdd('Torsdag')" title="Tilføj hurtig opgave/note"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <div class="quick-add-box" id="quickAdd-Torsdag">
+                            <input type="text" class="quick-add-input" placeholder="Hurtig opgave/note... (tryk Enter)" onkeydown="handleQuickAddKey(event, 'Torsdag')">
+                        </div>
                         <div class="calendar-list" id="cal-list-thu"></div>
                     </div>
+
                     <div class="calendar-col" id="col-Fredag" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'Fredag')">
-                        <div class="calendar-col-title">Fredag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></div>
+                        <div class="calendar-col-title">
+                            <span>Fredag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></span>
+                            <button class="btn-col-quickadd" onclick="toggleQuickAdd('Fredag')" title="Tilføj hurtig opgave/note"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                        <div class="quick-add-box" id="quickAdd-Fredag">
+                            <input type="text" class="quick-add-input" placeholder="Hurtig opgave/note... (tryk Enter)" onkeydown="handleQuickAddKey(event, 'Fredag')">
+                        </div>
                         <div class="calendar-list" id="cal-list-fri"></div>
                     </div>
                 </div>
@@ -653,6 +710,47 @@
             document.querySelectorAll('.cal-menu-dropdown').forEach(m => m.classList.remove('open'));
         }
     };
+
+    /* HURTIG OPRETTELSE I UGEPLAN */
+    function toggleQuickAdd(dayStr) {
+        let box = document.getElementById(`quickAdd-${dayStr}`);
+        if(!box) return;
+        let isOpen = box.classList.contains('open');
+        document.querySelectorAll('.quick-add-box').forEach(b => b.classList.remove('open'));
+        if(!isOpen) {
+            box.classList.add('open');
+            let input = box.querySelector('input');
+            if(input) input.focus();
+        }
+    }
+
+    function handleQuickAddKey(event, dayStr) {
+        if(event.key === 'Enter') {
+            let val = event.target.value.trim();
+            if(val) {
+                let newId = "t" + (tasks.length + 1);
+                let today = new Date().toISOString().split('T')[0];
+                tasks.unshift({
+                    id: newId,
+                    name: val,
+                    responsible: true,
+                    status: "Igangsat",
+                    priority: "Mellem",
+                    date: today,
+                    pct: 0,
+                    note: "",
+                    isFrog: false,
+                    plannedDay: dayStr,
+                    hours: 0,
+                    subtasks: []
+                });
+                event.target.value = "";
+                toggleQuickAdd(dayStr);
+                updateAllGaugesAndStats();
+                renderTasks();
+            }
+        }
+    }
 
     /* SNOOZE / QUICK MOVE */
     function snoozeTask(taskId, daysToAdd) {
