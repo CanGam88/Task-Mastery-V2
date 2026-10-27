@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Cockpit v2.0 - Cyber Edition</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root, [data-theme="cyan"] { 
+            --bg: #070d14; 
+            --card-bg: #0e1726; 
+            --border-color: #1a293e;
+            --border-glow: rgba(6, 182, 212, 0.3);
+            --header-bg: #111e33;
+            --input-bg: #09111c;
+            --row-hover: #132238;
+            --cal-bg: #08101a;
+            
+            --cyan-primary: #06b6d4;
+            --cyan-glow: #22d3ee;
+            --text-main: #f0f9ff;
+            --text-muted: #64748b;
+            --table-text: #cbd5e1;
+            --star-color: #f59e0b;
+        }
+
+        [data-theme="navy"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --border-color: #334155;
+            --border-glow: rgba(56, 189, 248, 0.3);
+            --header-bg: #1e293b;
+            --input-bg: #0f172a;
+            --row-hover: #1e293b;
+            --cal-bg: #090e1a;
+            
+            --cyan-primary: #38bdf8;
+            --cyan-glow: #7dd3fc;
+            --text-main: #f1f5f9;
+            --text-muted: #94a3b8;
+            --table-text: #cbd5e1;
+            --star-color: #fbbf24;
+        }
+
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text-main); transition: background 0.2s; }
+        .container { max-width: 1600px; margin: 0 auto; }
+
+        /* HEADER & TOP BAR */
+        .app-navigation { display: flex; align-items: center; justify-content: space-between; gap: 15px; background: var(--card-bg); padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        .nav-left { display: flex; align-items: center; gap: 15px; }
+        .nav-tabs { display: flex; gap: 8px; }
+        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 16px; font-size: 0.9rem; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+        .nav-btn:hover { color: var(--cyan-glow); background: var(--input-bg); }
+        .nav-btn.active { background: var(--input-bg); color: var(--cyan-glow); border-color: var(--cyan-primary); box-shadow: 0 0 10px var(--border-glow); }
+
+        select.status-select, select.day-select, select.priority-select, select.period-dropdown, select.theme-select, select.filter-select, select.cal-quick-select { 
+            background: var(--input-bg); 
+            color: var(--text-main); 
+            border: 1px solid var(--border-color); 
+            border-radius: 6px; 
+            padding: 5px 10px; 
+            font-size: 0.78rem; 
+            font-weight: 600; 
+            outline: none;
+            cursor: pointer;
+            transition: border-color 0.2s;
+        }
+        select:focus { border-color: var(--cyan-primary); }
+        select option { background-color: var(--card-bg) !important; color: var(--text-main) !important; }
+
+        .nav-right { display: flex; align-items: center; gap: 15px; }
+        .top-timer-compact { display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border-color); }
+        .top-time-display { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--cyan-glow); }
+        .top-timer-setup input { width: 32px; background: transparent; border: none; color: var(--text-main); text-align: center; font-size: 0.85rem; font-weight: 600; }
+        .btn-top-timer { border: none; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: transform 0.1s; }
+        .btn-top-timer-start { background: var(--cyan-primary); color: #000; }
+        .btn-top-timer-start:hover { background: var(--cyan-glow); }
+        .btn-top-timer-reset { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); }
+
+        .settings-wrapper { position: relative; }
+        .btn-settings { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: border-color 0.2s; }
+        .btn-settings:hover { border-color: var(--cyan-primary); color: var(--cyan-glow); }
+        .settings-dropdown { display: none; position: absolute; right: 0; top: 48px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; width: 230px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 100; }
+        .settings-dropdown.open { display: flex; flex-direction: column; gap: 12px; }
+        .settings-item { background: transparent; border: none; color: var(--text-main); padding: 8px; font-size: 0.85rem; font-weight: 600; text-align: left; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
+        .settings-item:hover { background: var(--input-bg); color: var(--cyan-glow); }
+        
+        .color-settings-section { border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 10px 0; display: flex; flex-direction: column; gap: 8px; }
+        .color-settings-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
+        .color-row { display: flex; justify-content: space-between; align-items: center; font-size: 0.8rem; font-weight: 600; }
+
+        .color-picker-input {
+            -webkit-appearance: none; -moz-appearance: none; appearance: none;
+            width: 22px; height: 22px; background-color: transparent; border: none; cursor: pointer; border-radius: 50%; padding: 0;
+        }
+        .color-picker-input::-webkit-color-swatch-wrapper { padding: 0; }
+        .color-picker-input::-webkit-color-swatch { border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; }
+
+        /* PROGRESS BAR */
+        .top-progress-wrapper { margin: 12px 0 20px 0; background: var(--card-bg); border-radius: 10px; padding: 10px 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
+        .top-progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .top-progress-bar-bg { width: 100%; height: 6px; background: var(--input-bg); border-radius: 3px; overflow: hidden; }
+        .top-progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--cyan-primary), #10b981); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px var(--cyan-glow); }
+
+        .app-page { display: none; }
+        .app-page.active-page { display: block; }
+
+        /* KPI GAUGES */
+        .cockpit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
+        .gauge-card { background: var(--card-bg); padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s ease; }
+        .gauge-card:hover { border-color: var(--cyan-primary); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .gauge-title { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
+        .gauge-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
+        .gauge-val-big { font-size: 1.5rem; font-weight: 800; }
+        .g-done .gauge-val-big { color: #10b981; }
+        .g-active .gauge-val-big { color: var(--cyan-glow); }
+        .g-late .gauge-val-big { color: #f43f5e; }
+        .g-todo .gauge-val-big { color: #64748b; }
+
+        .dashboard-full-container { display: flex; flex-direction: column; gap: 18px; width: 100%; }
+        .db-card { background: var(--card-bg); border-radius: 12px; padding: 18px; border: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
+        .db-card-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
+
+        /* FROG LIST */
+        .db-frog-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+        .db-frog-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--input-bg); border-radius: 10px; border: 1px solid var(--border-color); gap: 15px; cursor: pointer; transition: all 0.2s; }
+        .db-frog-item:hover { border-color: var(--cyan-primary); transform: translateX(3px); }
+        .db-frog-item-title strong { font-size: 0.95rem; font-weight: 700; color: var(--text-main); display: block; }
+        .db-frog-progress-bg { height: 6px; background: var(--card-bg); border-radius: 3px; overflow: hidden; margin-top: 6px; width: 100%; max-width: 350px; }
+        .db-frog-progress-fill { height: 100%; }
+
+        /* 3-COLUMN CALENDAR & DRAG/DROP */
+        .calendar-3col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; }
+        .calendar-col { 
+            background: var(--cal-bg); 
+            border-radius: 10px; 
+            padding: 14px; 
+            border: 1px solid var(--border-color); 
+            min-height: 220px; 
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            transition: border-color 0.2s, background-color 0.2s;
+        }
+        .calendar-col.drag-over {
+            border-color: var(--cyan-glow);
+            background-color: rgba(6, 182, 212, 0.05);
+        }
+
+        .calendar-col-title { 
+            font-size: 0.8rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            margin-bottom: 12px; 
+            color: var(--cyan-glow);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 8px;
+            letter-spacing: 0.5px;
+        }
+
+        .calendar-list { display: flex; flex-direction: column; gap: 10px; min-height: 150px; }
+        
+        .cal-card-item { 
+            position: relative;
+            background: var(--card-bg); 
+            border-radius: 8px; 
+            padding: 12px; 
+            border: 1px solid var(--border-color); 
+            border-left: 5px solid var(--cyan-primary); 
+            font-size: 0.85rem; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            transition: transform 0.15s, border-color 0.2s, opacity 0.2s;
+            cursor: grab;
+        }
+        .cal-card-item:active { cursor: grabbing; }
+        .cal-card-item.dragging { opacity: 0.4; transform: scale(0.98); }
+        .cal-card-item:hover { transform: translateY(-2px); border-color: var(--cyan-primary); }
+        .cal-card-item.status-done { opacity: 0.45; }
+        .cal-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
+        .cal-card-title { font-weight: 700; line-height: 1.35; flex-grow: 1; }
+        .cal-card-footer { display: flex; justify-content: space-between; align-items: center; font-size: 0.75rem; color: var(--text-muted); }
+
+        .cal-card-meta { display: flex; align-items: center; gap: 8px; }
+        .cal-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-muted); }
+
+        /* DROPDOWN MENU IN CALENDAR CARD */
+        .cal-menu-wrapper { position: relative; }
+        .btn-cal-menu { 
+            background: transparent; 
+            border: none; 
+            color: var(--text-muted); 
+            cursor: pointer; 
+            font-size: 0.9rem; 
+            padding: 2px 6px; 
+            border-radius: 4px;
+            line-height: 1;
+            transition: color 0.2s;
+        }
+        .btn-cal-menu:hover { color: var(--cyan-glow); background: var(--input-bg); }
+        .cal-menu-dropdown { 
+            display: none; 
+            position: absolute; 
+            right: 0; 
+            top: 22px; 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-color); 
+            border-radius: 8px; 
+            padding: 10px; 
+            width: 150px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.6); 
+            z-index: 50; 
+            flex-direction: column; 
+            gap: 8px; 
+        }
+        .cal-menu-dropdown.open { display: flex; }
+        .cal-menu-group { display: flex; flex-direction: column; gap: 4px; }
+        .cal-menu-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); }
+
+        /* TABLE SLIM */
+        .controls-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
+        .search-input { width: 100%; max-width: 300px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); font-size: 0.85rem; outline: none; }
+        .search-input:focus { border-color: var(--cyan-primary); }
+        .task-list { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        table { width: 100%; border-collapse: collapse; }
+        th { background: var(--header-bg); padding: 12px; text-align: left; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border-color); letter-spacing: 0.5px; }
+        td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--table-text); }
+        tr:hover { background-color: var(--row-hover); }
+
+        .task-name-click { cursor: pointer; display: flex; align-items: center; gap: 8px; }
+        .task-name-click:hover { text-decoration: underline; color: var(--cyan-glow); }
+
+        input[type="text"], input[type="date"], input[type="number"] { border: none; background: transparent; color: var(--text-main); font-size: 0.85rem; font-family: inherit; }
+        input[type="text"]:focus, input[type="date"]:focus { outline: none; background: var(--input-bg); border-radius: 4px; }
+        
+        .progress-bar { height: 5px; background: var(--input-bg); border-radius: 3px; overflow: hidden; margin-top: 5px; width: 80px; }
+        .progress-fill { height: 100%; }
+        
+        .btn-star { background: none; border: none; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
+        .btn-star.starred { color: var(--star-color); }
+        .responsible-btn { background: none; border: none; cursor: pointer; font-size: 1.1rem; }
+
+        .btn-task-timer { background: transparent; border: none; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
+        .btn-task-timer.running { color: #f43f5e; }
+
+        .btn-add { background: var(--cyan-primary); color: #000; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+        .btn-add:hover { background: var(--cyan-glow); }
+        .btn-backup-action { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
+
+        /* MODAL TIL KOMMENTAR OG CHECKLISTE */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-overlay.open { display: flex; }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; width: 100%; max-width: 600px; padding: 22px; box-shadow: 0 15px 40px rgba(0,0,0,0.7); display: flex; flex-direction: column; gap: 16px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.15rem; color: var(--cyan-glow); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+        .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; transition: color 0.2s; }
+        .modal-close:hover { color: var(--text-main); }
+        .modal-textarea { width: 100%; height: 110px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); font-family: inherit; font-size: 0.9rem; resize: vertical; box-sizing: border-box; outline: none; }
+        .modal-textarea:focus { border-color: var(--cyan-primary); }
+
+        /* CHECKLIST IN MODAL */
+        .checklist-section { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border-color); padding-top: 12px; }
+        .checklist-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: flex; justify-content: space-between; }
+        .checklist-items { display: flex; flex-direction: column; gap: 6px; max-height: 150px; overflow-y: auto; }
+        .checklist-item { display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
+        .checklist-item input[type="checkbox"] { accent-color: var(--cyan-primary); cursor: pointer; }
+        .checklist-item input[type="text"] { flex-grow: 1; font-size: 0.85rem; color: var(--text-main); }
+        .btn-remove-subtask { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; }
+        .btn-remove-subtask:hover { color: #f43f5e; }
+        .btn-add-subtask { background: transparent; border: 1px dashed var(--border-color); color: var(--cyan-primary); padding: 6px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: center; margin-top: 4px; }
+        .btn-add-subtask:hover { background: var(--input-bg); border-color: var(--cyan-primary); }
+
+        .modal-footer { display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 12px; }
+        .btn-modal-save { background: var(--cyan-primary); color: #000; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .btn-modal-save:hover { background: var(--cyan-glow); }
+    </style>
+</head>
+<body>
+<div class="container">
+    <!-- TOP NAVIGATION & CONTROLS -->
+    <div class="app-navigation">
+        <div class="nav-left">
+            <div class="nav-tabs">
+                <button class="nav-btn active" id="nav-db" onclick="switchPage('dashboard')"><i class="fa-solid fa-chart-pie"></i> Dashboard</button>
+                <button class="nav-btn" id="nav-tasks" onclick="switchPage('tasks')"><i class="fa-solid fa-list-check"></i> Mine Opgaver</button>
+            </div>
+            <select class="period-dropdown" id="periodSelect" onchange="setDashboardPeriod(this.value)">
+                <option value="7">1 Uge</option>
+                <option value="30">30 Dage</option>
+                <option value="90" selected>3 Måneder</option>
+                <option value="365">Hele Året</option>
+            </select>
+        </div>
+
+        <div class="nav-right">
+            <!-- TIMER -->
+            <div class="top-timer-compact">
+                <div class="top-time-display" id="timeDisplay">25:00</div>
+                <div class="top-timer-setup">
+                    <input type="number" id="minutesInput" value="25" min="1" max="180" onchange="updateDuration()">m
+                </div>
+                <button class="btn-top-timer btn-top-timer-reset" onclick="resetTimer()"><i class="fa-solid fa-rotate-left"></i></button>
+                <button class="btn-top-timer btn-top-timer-start" id="startTimerBtn" onclick="toggleTimer()">Start</button>
+            </div>
+
+            <!-- SETTINGS -->
+            <div class="settings-wrapper">
+                <button class="btn-settings" onclick="toggleSettingsMenu()"><i class="fa-solid fa-gear"></i></button>
+                <div class="settings-dropdown" id="settingsDropdown">
+                    <div style="display:flex; flex-direction:column; gap:4px;">
+                        <span class="color-settings-title">Vælg Tema</span>
+                        <select class="theme-select" onchange="changeTheme(this.value)">
+                            <option value="cyan">Cyber Cyan</option>
+                            <option value="navy">Midnight Navy</option>
+                        </select>
+                    </div>
+
+                    <div class="color-settings-section">
+                        <div class="color-settings-title">Prioritets-farver</div>
+                        <div class="color-row">
+                            <span style="color:var(--text-main);">Lav</span>
+                            <input type="color" id="colorPickerLav" class="color-picker-input" value="#06b6d4" onchange="updatePriorityColor('Lav', this.value)">
+                        </div>
+                        <div class="color-row">
+                            <span style="color:var(--text-main);">Mellem</span>
+                            <input type="color" id="colorPickerMellem" class="color-picker-input" value="#f59e0b" onchange="updatePriorityColor('Mellem', this.value)">
+                        </div>
+                        <div class="color-row">
+                            <span style="color:var(--text-main);">Høj</span>
+                            <input type="color" id="colorPickerHoj" class="color-picker-input" value="#f43f5e" onchange="updatePriorityColor('Høj', this.value)">
+                        </div>
+                    </div>
+                    <button class="settings-item" onclick="exportDataToFile()"><i class="fa-solid fa-download"></i> Gem backup</button>
+                    <button class="settings-item" onclick="triggerImportFile()"><i class="fa-solid fa-upload"></i> Hent backup</button>
+                    <input type="file" id="backupFileInput" style="display: none;" accept=".json" onchange="importDataFromFile(event)">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FREMDRIFTSBAR -->
+    <div class="top-progress-wrapper">
+        <div class="top-progress-header">
+            <span>Samlet Fremdrift (Zonen)</span>
+            <span id="globalProgressText">0%</span>
+        </div>
+        <div class="top-progress-bar-bg">
+            <div class="top-progress-bar-fill" id="globalProgressBarFill"></div>
+        </div>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="page-dashboard" class="app-page active-page">
+        <div class="cockpit-grid">
+            <div class="gauge-card g-done" onclick="kpiClickFilter('Fuldført')">
+                <div>
+                    <div class="gauge-title">Færdige</div>
+                    <div class="gauge-sub">Mål i zonen</div>
+                </div>
+                <div class="gauge-val-big" id="val-done">0</div>
+            </div>
+            <div class="gauge-card g-active" onclick="kpiClickFilter('Igangsat')">
+                <div>
+                    <div class="gauge-title">I gang</div>
+                    <div class="gauge-sub">Aktive nu</div>
+                </div>
+                <div class="gauge-val-big" id="val-active">0</div>
+            </div>
+            <div class="gauge-card g-late" onclick="kpiClickFilter('Kritiske')">
+                <div>
+                    <div class="gauge-title">Kritiske</div>
+                    <div class="gauge-sub">&lt; 7 dage / overskredet</div>
+                </div>
+                <div class="gauge-val-big" id="val-late">0</div>
+            </div>
+            <div class="gauge-card g-todo" onclick="kpiClickFilter('Venter')">
+                <div>
+                    <div class="gauge-title">Mangler opstart</div>
+                    <div class="gauge-sub">Afventer</div>
+                </div>
+                <div class="gauge-val-big" id="val-todo">0</div>
+            </div>
+        </div>
+
+        <div class="dashboard-full-container">
+            <!-- FOKUSOPGAVER -->
+            <div class="db-card">
+                <div class="db-card-title"><span><i class="fa-solid fa-star" style="color:var(--star-color);"></i> Mit primære fokus</span></div>
+                <div id="db-frog-content-area" class="db-frog-list"></div>
+            </div>
+
+            <!-- 3-COL CALENDAR -->
+            <div class="db-card">
+                <div class="db-card-title">
+                    <span><i class="fa-solid fa-calendar-week"></i> Ugeplan (Træk opgaver til dagene)</span>
+                    <button onclick="toggleHideCalDone()" id="btnHideCalDone" style="background:transparent; color:var(--text-muted); border:none; font-size:0.7rem; cursor:pointer;">
+                        <i class="fa-solid fa-eye-slash"></i> Skjul færdige
+                    </button>
+                </div>
+                <div class="calendar-3col-grid">
+                    <div class="calendar-col" id="col-Mandag-onsdag" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'Mandag-onsdag')">
+                        <div class="calendar-col-title">Mandag - Onsdag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></div>
+                        <div class="calendar-list" id="cal-list-mon-wed"></div>
+                    </div>
+                    <div class="calendar-col" id="col-Torsdag" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'Torsdag')">
+                        <div class="calendar-col-title">Torsdag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></div>
+                        <div class="calendar-list" id="cal-list-thu"></div>
+                    </div>
+                    <div class="calendar-col" id="col-Fredag" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'Fredag')">
+                        <div class="calendar-col-title">Fredag <i class="fa-solid fa-calendar-day" style="opacity:0.5;"></i></div>
+                        <div class="calendar-list" id="cal-list-fri"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TASKS PAGE -->
+    <div id="page-tasks" class="app-page">
+        <div class="controls-row">
+            <div style="display:flex; gap:10px; align-items:center;">
+                <input type="text" id="taskSearchInput" class="search-input" placeholder="Søg i opgaver..." oninput="handleSearch()">
+                <select class="filter-select" id="responsibleFilter" onchange="handleFilterChange()">
+                    <option value="all">Ansvarlig: Alle</option>
+                    <option value="mine" selected>Ansvarlig: Kun mig (✅)</option>
+                    <option value="not_mine">Ansvarlig: Ikke mig (❌)</option>
+                </select>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-backup-action" id="clearKpiBtn" onclick="clearKpiFilter()" style="display:none;"><i class="fa-solid fa-xmark"></i> Nulstil filter</button>
+                <button class="btn-add" onclick="addNewTask()"><i class="fa-solid fa-plus"></i> Ny opgave</button>
+            </div>
+        </div>
+
+        <div class="task-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 40px; text-align: center;">Ansvar</th>
+                        <th style="width: 35px; text-align: center;">Fokus</th>
+                        <th>Opgavebeskrivelse</th>
+                        <th style="width: 130px;">Planlagt dag</th>
+                        <th style="width: 130px;">Planlagt Dato</th>
+                        <th style="width: 100px;">Prioritet</th>
+                        <th style="width: 120px;">Status</th>
+                        <th style="width: 100px;">Fremdrift</th>
+                        <th style="width: 60px; text-align:center;">Stopur</th>
+                    </tr>
+                </thead>
+                <tbody id="taskTableBody"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL TIL KOMMENTAR, BESKRIVELSE OG UNDEROPGAVER -->
+<div class="modal-overlay" id="noteModal">
+    <div class="modal-card">
+        <div class="modal-header">
+            <span id="modalTaskTitle">Opgavebeskrivelse</span>
+            <button class="modal-close" onclick="closeNoteModal()"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <textarea id="modalNoteInput" class="modal-textarea" placeholder="Skriv din kommentar eller detaljerede beskrivelse her..."></textarea>
+        
+        <!-- UNDEROPGAVER / CHECKLISTE -->
+        <div class="checklist-section">
+            <div class="checklist-title">
+                <span><i class="fa-solid fa-list-check"></i> Underopgaver / Checkliste</span>
+                <span id="checklistRatioText">0/0</span>
+            </div>
+            <div id="modalSubtasksContainer" class="checklist-items"></div>
+            <button class="btn-add-subtask" onclick="addSubtaskItem()"><i class="fa-solid fa-plus"></i> Tilføj underopgave</button>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn-modal-save" onclick="saveTaskNote()"><i class="fa-solid fa-check"></i> Gem & Opdater</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let priorityColors = {
+        "Lav": "#06b6d4",
+        "Mellem": "#f59e0b",
+        "Høj": "#f43f5e"
+    };
+
+    let tasks = [
+        {"id":"t1","name":"Overvågning og tømning afdontank","responsible":true,"status":"Igangsat","priority":"Lav","date":"2026-09-02","pct":25,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t2","name":"Ændringer til esop måske","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-09-07","pct":10,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t3","name":"Slr måling","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-09-02","pct":0,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t4","name":"7 - Ovnbygning: Dæk 2+3 - 6S - Nødvendige eSOPs ikke opdateret","responsible":true,"status":"Igangsat","priority":"Mellem","date":"2026-09-02","pct":0,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t5","name":"Tilføjelse til eSOP Trådning af synål","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-09-02","pct":40,"note":"","isFrog":true,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t6","name":"3 - BM-bygning - Fældekar - Imprægneringsolietank – område omkring BM-bygning - 6S","responsible":false,"status":"Igangsat","priority":"Mellem","date":"2026-09-10","pct":0,"note":"","isFrog":false,"plannedDay":"Torsdag","subtasks":[]},
+        {"id":"t7","name":"Udeområdet mangler en esop på AQ råvarefyldning","responsible":false,"status":"Venter","priority":"Lav","date":"2026-09-16","pct":0,"note":"","isFrog":false,"plannedDay":"Ikke planlagt","subtasks":[]},
+        {"id":"t8","name":"eSOP ønskes på visuel kontrol","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-09-21","pct":15,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t9","name":"Omby hættestrækker - trådning af folie","responsible":false,"status":"Igangsat","priority":"Mellem","date":"2026-08-31","pct":0,"note":"","isFrog":false,"plannedDay":"Ikke planlagt","subtasks":[]},
+        {"id":"t10","name":"CE-mærkning- Produktion GL. pakkeri # 226 side 170","responsible":false,"status":"Igangsat","priority":"Mellem","date":"2026-08-31","pct":0,"note":"","isFrog":false,"plannedDay":"Ikke planlagt","subtasks":[]},
+        {"id":"t11","name":"trækstyrke (KUN OEM'er)","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-09-02","pct":50,"note":"","isFrog":true,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t12","name":"Vedligeholdelse af delamineringen (Vokskar tøm og rens)","responsible":true,"status":"Venter","priority":"Mellem","date":"2026-10-26","pct":0,"note":"","isFrog":false,"plannedDay":"Ikke planlagt","subtasks":[]},
+        {"id":"t13","name":"Opdatering af betjeningsvejledninger","responsible":false,"status":"Igangsat","priority":"Lav","date":"2026-11-02","pct":10,"note":"","isFrog":false,"plannedDay":"Ikke planlagt","subtasks":[]},
+        {"id":"t14","name":"Rettelse til e-SOP: Spinderskift","responsible":false,"status":"Igangsat","priority":"Mellem","date":"2026-12-14","pct":0,"note":"","isFrog":false,"plannedDay":"Ikke planlagt","subtasks":[]},
+        {"id":"t15","name":"Fines brænder","responsible":true,"status":"Igangsat","priority":"Mellem","date":"2026-09-02","pct":0,"note":"","isFrog":false,"plannedDay":"Torsdag","subtasks":[]},
+        {"id":"t16","name":"APV -mek - Udskiftning af pigbånd m.m.","responsible":false,"status":"Igangsat","priority":"Mellem","date":"2026-08-31","pct":0,"note":"","isFrog":false,"plannedDay":"Ikke planlagt","subtasks":[]}
+    ];
+
+    let dashboardPeriodDays = 90;
+    let hideCalDone = false;
+    let currentKpiFilter = null;
+    let searchQuery = "";
+    let activeEditingTaskId = null;
+    let draggedTaskId = null;
+
+    let timerInterval = null;
+    let timerDurationSeconds = 25 * 60;
+    let timerTimeLeft = 25 * 60;
+    let timerRunning = false;
+
+    let taskTimerInterval = null;
+    let runningTaskId = null;
+
+    window.onload = function() {
+        tasks.forEach(t => {
+            if (t.pct === undefined) t.pct = 0;
+            if (t.hours === undefined) t.hours = 0;
+            if (!t.plannedDay) t.plannedDay = "Ikke planlagt";
+            if (!t.priority) t.priority = "Mellem";
+            if (!t.note) t.note = "";
+            if (!t.subtasks) t.subtasks = [];
+        });
+        updateAllGaugesAndStats();
+        renderTasks();
+    };
+
+    function switchPage(page) {
+        document.getElementById('page-dashboard').className = 'app-page' + (page==='dashboard'?' active-page':'');
+        document.getElementById('page-tasks').className = 'app-page' + (page==='tasks'?' active-page':'');
+        document.getElementById('nav-db').className = 'nav-btn' + (page==='dashboard'?' active':'');
+        document.getElementById('nav-tasks').className = 'nav-btn' + (page==='tasks'?' active':'');
+        if(page === 'dashboard') updateAllGaugesAndStats();
+    }
+
+    function changeTheme(themeName) {
+        document.body.setAttribute('data-theme', themeName);
+    }
+
+    function toggleSettingsMenu() {
+        document.getElementById('settingsDropdown').classList.toggle('open');
+    }
+
+    function toggleCalMenu(taskId, event) {
+        if(event) event.stopPropagation();
+        let menu = document.getElementById(`cal-menu-${taskId}`);
+        if(menu) {
+            let isOpen = menu.classList.contains('open');
+            document.querySelectorAll('.cal-menu-dropdown').forEach(m => m.classList.remove('open'));
+            if(!isOpen) menu.classList.add('open');
+        }
+    }
+
+    window.onclick = function(e) {
+        if (!e.target.closest('.settings-wrapper')) {
+            document.getElementById('settingsDropdown').classList.remove('open');
+        }
+        if (!e.target.closest('.cal-menu-wrapper')) {
+            document.querySelectorAll('.cal-menu-dropdown').forEach(m => m.classList.remove('open'));
+        }
+    };
+
+    /* DRAG AND DROP */
+    function handleDragStart(e, taskId) {
+        draggedTaskId = taskId;
+        e.target.classList.add('dragging');
+        e.dataTransfer.setData('text/plain', taskId);
+    }
+    function handleDragEnd(e) {
+        e.target.classList.remove('dragging');
+        document.querySelectorAll('.calendar-col').forEach(c => c.classList.remove('drag-over'));
+    }
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+    }
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+    function handleDrop(e, newDay) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        if(draggedTaskId) {
+            updateTaskField(draggedTaskId, 'plannedDay', newDay);
+            draggedTaskId = null;
+        }
+    }
+
+    /* MODAL & SUBTASKS */
+    function openNoteModal(taskId) {
+        let task = tasks.find(t => t.id === taskId);
+        if(!task) return;
+        activeEditingTaskId = taskId;
+        document.getElementById('modalTaskTitle').innerText = task.name;
+        document.getElementById('modalNoteInput').value = task.note || "";
+        renderSubtasksInModal(task);
+        document.getElementById('noteModal').classList.add('open');
+    }
+
+    function closeNoteModal() {
+        document.getElementById('noteModal').classList.remove('open');
+        activeEditingTaskId = null;
+    }
+
+    function renderSubtasksInModal(task) {
+        let container = document.getElementById('modalSubtasksContainer');
+        container.innerHTML = "";
+        let doneCount = task.subtasks.filter(s => s.done).length;
+        document.getElementById('checklistRatioText').innerText = `${doneCount}/${task.subtasks.length}`;
+
+        task.subtasks.forEach((st, idx) => {
+            container.innerHTML += `
+                <div class="checklist-item">
+                    <input type="checkbox" ${st.done ? 'checked':''} onchange="toggleSubtaskDone(${idx}, this.checked)">
+                    <input type="text" value="${st.title}" onchange="updateSubtaskTitle(${idx}, this.value)" placeholder="Beskriv underopgave...">
+                    <button class="btn-remove-subtask" onclick="removeSubtaskItem(${idx})"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `;
+        });
+    }
+
+    function addSubtaskItem() {
+        if(!activeEditingTaskId) return;
+        let task = tasks.find(t => t.id === activeEditingTaskId);
+        if(task) {
+            task.subtasks.push({ title: "", done: false });
+            renderSubtasksInModal(task);
+        }
+    }
+
+    function toggleSubtaskDone(index, isDone) {
+        let task = tasks.find(t => t.id === activeEditingTaskId);
+        if(task && task.subtasks[index]) {
+            task.subtasks[index].done = isDone;
+            recalculatePctFromSubtasks(task);
+            renderSubtasksInModal(task);
+        }
+    }
+
+    function updateSubtaskTitle(index, title) {
+        let task = tasks.find(t => t.id === activeEditingTaskId);
+        if(task && task.subtasks[index]) {
+            task.subtasks[index].title = title;
+        }
+    }
+
+    function removeSubtaskItem(index) {
+        let task = tasks.find(t => t.id === activeEditingTaskId);
+        if(task) {
+            task.subtasks.splice(index, 1);
+            recalculatePctFromSubtasks(task);
+            renderSubtasksInModal(task);
+        }
+    }
+
+    function recalculatePctFromSubtasks(task) {
+        if(task.subtasks.length > 0) {
+            let done = task.subtasks.filter(s => s.done).length;
+            task.pct = Math.round((done / task.subtasks.length) * 100);
+            if(task.pct === 100) task.status = "Fuldført";
+            else if(task.status === "Fuldført" && task.pct < 100) task.status = "Igangsat";
+        }
+    }
+
+    function saveTaskNote() {
+        if(!activeEditingTaskId) return;
+        let task = tasks.find(t => t.id === activeEditingTaskId);
+        if(task) {
+            task.note = document.getElementById('modalNoteInput').value;
+            renderTasks();
+            updateAllGaugesAndStats();
+        }
+        closeNoteModal();
+    }
+
+    function updatePriorityColor(level, color) {
+        priorityColors[level] = color;
+        updateAllGaugesAndStats();
+        renderTasks();
+    }
+
+    function getTaskColor(priority) {
+        return priorityColors[priority] || "#06b6d4";
+    }
+
+    function setDashboardPeriod(val) {
+        dashboardPeriodDays = parseInt(val);
+        updateAllGaugesAndStats();
+    }
+
+    function isWithinDashboardPeriod(dateStr) {
+        if(!dateStr) return false;
+        let taskDate = new Date(dateStr);
+        let today = new Date();
+        today.setHours(0,0,0,0);
+        taskDate.setHours(0,0,0,0);
+        let limitDate = new Date();
+        limitDate.setDate(today.getDate() + dashboardPeriodDays);
+        return taskDate <= limitDate;
+    }
+
+    function toggleHideCalDone() {
+        hideCalDone = !hideCalDone;
+        updateAllGaugesAndStats();
+    }
+
+    function updateDuration() {
+        if(timerRunning) return;
+        let mins = parseInt(document.getElementById('minutesInput').value) || 25;
+        timerDurationSeconds = mins * 60;
+        timerTimeLeft = timerDurationSeconds;
+        displayTimer();
+    }
+
+    function displayTimer() {
+        let m = Math.floor(timerTimeLeft / 60);
+        let s = timerTimeLeft % 60;
+        document.getElementById('timeDisplay').innerText = `${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+    }
+
+    function toggleTimer() {
+        const btn = document.getElementById('startTimerBtn');
+        if(timerRunning) {
+            clearInterval(timerInterval);
+            timerRunning = false;
+            btn.innerText = "Start";
+            btn.style.background = "var(--cyan-primary)";
+        } else {
+            timerRunning = true;
+            btn.innerText = "Pause";
+            btn.style.background = "#f43f5e";
+            timerInterval = setInterval(() => {
+                if(timerTimeLeft > 0) {
+                    timerTimeLeft--;
+                    displayTimer();
+                } else {
+                    clearInterval(timerInterval);
+                    timerRunning = false;
+                    alert("Tiden er gået!");
+                    resetTimer();
+                }
+            }, 1000);
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        timerRunning = false;
+        timerTimeLeft = timerDurationSeconds;
+        displayTimer();
+        const btn = document.getElementById('startTimerBtn');
+        btn.innerText = "Start";
+        btn.style.background = "var(--cyan-primary)";
+    }
+
+    function toggleTaskTimer(id) {
+        if (runningTaskId === id) {
+            clearInterval(taskTimerInterval);
+            runningTaskId = null;
+            renderTasks();
+            updateAllGaugesAndStats();
+            return;
+        }
+        if (runningTaskId !== null) clearInterval(taskTimerInterval);
+        runningTaskId = id;
+        renderTasks();
+        updateAllGaugesAndStats();
+
+        taskTimerInterval = setInterval(() => {
+            let task = tasks.find(t => t.id === runningTaskId);
+            if (task) {
+                task.hours = parseFloat(((task.hours || 0) + (1 / 3600)).toFixed(4));
+                let displayDashboard = document.getElementById(`dash-timer-text-${task.id}`);
+                if(displayDashboard) displayDashboard.innerText = formatHours(task.hours);
+            }
+        }, 1000);
+    }
+
+    function formatHours(h) {
+        if(!h) return "0h";
+        if(h < 0.1) return `${Math.round(h * 60)}m`;
+        return `${h.toFixed(1)}h`;
+    }
+
+    function handleSearch() {
+        searchQuery = document.getElementById('taskSearchInput').value.toLowerCase();
+        renderTasks();
+    }
+
+    function handleFilterChange() {
+        renderTasks();
+    }
+
+    function kpiClickFilter(type) {
+        currentKpiFilter = type;
+        document.getElementById('clearKpiBtn').style.display = 'inline-block';
+        switchPage('tasks');
+        renderTasks();
+    }
+
+    function clearKpiFilter() {
+        currentKpiFilter = null;
+        document.getElementById('clearKpiBtn').style.display = 'none';
+        renderTasks();
+    }
+
+    function updateTaskField(id, field, val) {
+        let task = tasks.find(t => t.id === id);
+        if(!task) return;
+        if (field === 'responsible') task.responsible = (val === 'true' || val === true);
+        else if (field === 'isFrog') task.isFrog = (val === 'true' || val === true);
+        else if (field === 'pct') {
+            task.pct = Math.max(0, Math.min(100, parseInt(val) || 0));
+            if(task.pct === 100) task.status = "Fuldført";
+        } else if (field === 'status') {
+            task.status = val;
+            if(val === 'Fuldført') task.pct = 100;
+        } else task[field] = val;
+        
+        renderTasks();
+        updateAllGaugesAndStats();
+    }
+
+    function addNewTask() {
+        let newId = "t" + (tasks.length + 1);
+        tasks.unshift({ id: newId, name: "Ny opgave", responsible: true, status: "Igangsat", priority: "Mellem", date: new Date().toISOString().split('T')[0], pct: 0, note: "", isFrog: false, plannedDay: "Ikke planlagt", hours: 0, subtasks: [] });
+        renderTasks();
+        updateAllGaugesAndStats();
+    }
+
+    function renderTasks() {
+        let activeBody = document.getElementById('taskTableBody');
+        if(!activeBody) return;
+        activeBody.innerHTML = "";
+
+        let respFilter = document.getElementById('responsibleFilter') ? document.getElementById('responsibleFilter').value : 'mine';
+
+        tasks.forEach(t => {
+            if (respFilter === 'mine' && !t.responsible) return;
+            if (respFilter === 'not_mine' && t.responsible) return;
+
+            if (searchQuery && !t.name.toLowerCase().includes(searchQuery)) return;
+            if (currentKpiFilter) {
+                if (!isWithinDashboardPeriod(t.date)) return;
+                if (currentKpiFilter === 'Kritiske') {
+                    if (t.status === 'Fuldført') return;
+                    let diff = (new Date(t.date) - new Date()) / (1000*60*60*24);
+                    if (diff > 7) return;
+                } else if (t.status !== currentKpiFilter) return;
+            }
+
+            let prioColor = getTaskColor(t.priority);
+            let hasNote = t.note && t.note.trim() !== "";
+            let subCount = t.subtasks ? t.subtasks.length : 0;
+            let subDone = t.subtasks ? t.subtasks.filter(s => s.done).length : 0;
+
+            activeBody.innerHTML += `
+                <tr>
+                    <td style="text-align:center;">
+                        <button class="responsible-btn" title="Klik for at skifte ansvar" onclick="updateTaskField('${t.id}', 'responsible', ${!t.responsible})">
+                            ${t.responsible ? '✅' : '❌'}
+                        </button>
+                    </td>
+                    <td style="text-align:center;">
+                        <button class="btn-star ${t.isFrog ? 'starred':''}" onclick="updateTaskField('${t.id}', 'isFrog', ${!t.isFrog})"><i class="fa-solid fa-star"></i></button>
+                    </td>
+                    <td>
+                        <div class="task-name-click" onclick="openNoteModal('${t.id}')">
+                            <input type="text" value="${t.name}" style="width:100%; font-weight:600;" onchange="updateTaskField('${t.id}', 'name', this.value)" onclick="event.stopPropagation()">
+                            ${hasNote ? '<i class="fa-solid fa-comment" style="color:var(--cyan-glow); font-size:0.8rem;" title="Har kommentar"></i>' : ''}
+                            ${subCount > 0 ? `<span class="cal-badge"><i class="fa-solid fa-list-check"></i> ${subDone}/${subCount}</span>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <select class="day-select" onchange="updateTaskField('${t.id}', 'plannedDay', this.value)">
+                            <option value="Ikke planlagt" ${t.plannedDay==='Ikke planlagt'?'selected':''}>Ikke planlagt</option>
+                            <option value="Mandag-onsdag" ${t.plannedDay==='Mandag-onsdag'?'selected':''}>Man-Ons</option>
+                            <option value="Torsdag" ${t.plannedDay==='Torsdag'?'selected':''}>Torsdag</option>
+                            <option value="Fredag" ${t.plannedDay==='Fredag'?'selected':''}>Fredag</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="date" value="${t.date}" onchange="updateTaskField('${t.id}', 'date', this.value)">
+                    </td>
+                    <td>
+                        <select class="priority-select" style="color:${prioColor}; border-color:${prioColor};" onchange="updateTaskField('${t.id}', 'priority', this.value)">
+                            <option value="Lav" ${t.priority==='Lav'?'selected':''}>Lav</option>
+                            <option value="Mellem" ${t.priority==='Mellem'?'selected':''}>Mellem</option>
+                            <option value="Høj" ${t.priority==='Høj'?'selected':''}>Høj</option>
+                        </select>
+                    </td>
+                    <td>
+                        <select class="status-select" onchange="updateTaskField('${t.id}', 'status', this.value)">
+                            <option value="Igangsat" ${t.status==='Igangsat'?'selected':''}>Igangsat</option>
+                            <option value="Venter" ${t.status==='Venter'?'selected':''}>Venter</option>
+                            <option value="Fuldført" ${t.status==='Fuldført'?'selected':''}>Fuldført</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input type="number" value="${t.pct}" style="width:30px; text-align:center;" min="0" max="100" onchange="updateTaskField('${t.id}', 'pct', this.value)">%
+                        <div class="progress-bar"><div class="progress-fill" style="width:${t.pct}%; background:${prioColor};"></div></div>
+                    </td>
+                    <td style="text-align:center;">
+                        <button class="btn-task-timer ${runningTaskId === t.id ? 'running':''}" onclick="toggleTaskTimer('${t.id}')">
+                            <i class="fa-solid ${runningTaskId === t.id ? 'fa-stopwatch':'fa-play'}"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+        });
+    }
+
+    function updateAllGaugesAndStats() {
+        let zoneTasks = tasks.filter(t => isWithinDashboardPeriod(t.date) && t.responsible);
+        let total = zoneTasks.length;
+        let done = zoneTasks.filter(t => t.status === 'Fuldført').length;
+        let active = zoneTasks.filter(t => t.status === 'Igangsat').length;
+        let todo = zoneTasks.filter(t => t.status === 'Venter').length;
+        let late = zoneTasks.filter(t => t.status !== 'Fuldført' && ((new Date(t.date) - new Date()) / (1000*60*60*24)) <= 7).length;
+
+        document.getElementById('val-done').innerText = done;
+        document.getElementById('val-active').innerText = active;
+        document.getElementById('val-late').innerText = late;
+        document.getElementById('val-todo').innerText = todo;
+
+        let totalPct = zoneTasks.reduce((acc, t) => acc + (t.pct || 0), 0);
+        let avgPct = total > 0 ? Math.round(totalPct / total) : 0;
+        document.getElementById('globalProgressText').innerText = avgPct + "%";
+        document.getElementById('globalProgressBarFill').style.width = avgPct + "%";
+
+        // EAT THAT FROG
+        let frogArea = document.getElementById('db-frog-content-area');
+        let frogs = zoneTasks.filter(t => t.isFrog && t.status !== 'Fuldført');
+        frogArea.innerHTML = frogs.length === 0 ? `<div style="font-size:0.85rem; color:var(--text-muted);">Ingen aktive fokusopgaver i zonen.</div>` : "";
+        
+        frogs.forEach(f => {
+            let itemColor = getTaskColor(f.priority);
+            let hasNote = f.note && f.note.trim() !== "";
+            let subCount = f.subtasks ? f.subtasks.length : 0;
+            let subDone = f.subtasks ? f.subtasks.filter(s => s.done).length : 0;
+
+            frogArea.innerHTML += `
+                <div class="db-frog-item" onclick="openNoteModal('${f.id}')">
+                    <div style="flex-grow:1;">
+                        <div class="db-frog-item-title">
+                            <strong>${f.name} ${hasNote ? '<i class="fa-solid fa-comment" style="font-size:0.8rem; color:var(--cyan-glow);"></i>':''}</strong>
+                        </div>
+                        <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; display:flex; gap:10px; align-items:center;">
+                            <span>Dato: ${f.date}</span>
+                            <span>Prioritet: <strong style="color:${itemColor};">${f.priority}</strong></span>
+                            <span>Fremdrift: ${f.pct}%</span>
+                            ${subCount > 0 ? `<span class="cal-badge"><i class="fa-solid fa-list-check"></i> ${subDone}/${subCount}</span>` : ''}
+                        </div>
+                        <div class="db-frog-progress-bg">
+                            <div class="db-frog-progress-fill" style="width:${f.pct}%; background:${itemColor};"></div>
+                        </div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;" onclick="event.stopPropagation()">
+                        <button class="btn-task-timer ${runningTaskId === f.id ? 'running':''}" onclick="toggleTaskTimer('${f.id}')">
+                            <i class="fa-solid ${runningTaskId === f.id ? 'fa-stopwatch':'fa-play'}" style="font-size:1.1rem;"></i>
+                        </button>
+                        <span id="dash-timer-text-${f.id}" style="font-size:0.9rem; font-weight:bold;">${formatHours(f.hours)}</span>
+                    </div>
+                </div>
+            `;
+        });
+
+        // CALENDAR
+        let monWedList = document.getElementById('cal-list-mon-wed');
+        let thuList = document.getElementById('cal-list-thu');
+        let friList = document.getElementById('cal-list-fri');
+        monWedList.innerHTML = ""; thuList.innerHTML = ""; friList.innerHTML = "";
+
+        zoneTasks.forEach(t => {
+            if(hideCalDone && t.status === 'Fuldført') return;
+            let isDone = t.status === 'Fuldført';
+            let itemColor = getTaskColor(t.priority);
+            let hasNote = t.note && t.note.trim() !== "";
+            let subCount = t.subtasks ? t.subtasks.length : 0;
+            let subDone = t.subtasks ? t.subtasks.filter(s => s.done).length : 0;
+
+            let itemHtml = `
+                <div class="cal-card-item ${isDone ? 'status-done':''}" style="border-left-color: ${itemColor};" 
+                     draggable="true" ondragstart="handleDragStart(event, '${t.id}')" ondragend="handleDragEnd(event)"
+                     onclick="openNoteModal('${t.id}')">
+                    <div class="cal-card-header">
+                        <div class="cal-card-title">
+                            ${t.name}
+                        </div>
+                        <div class="cal-menu-wrapper" onclick="event.stopPropagation()">
+                            <button class="btn-cal-menu" onclick="toggleCalMenu('${t.id}', event)"><i class="fa-solid fa-ellipsis-vertical"></i></button>
+                            <div class="cal-menu-dropdown" id="cal-menu-${t.id}">
+                                <div class="cal-menu-group">
+                                    <span class="cal-menu-label">Prioritet</span>
+                                    <select class="cal-quick-select" style="color:${itemColor}; border-color:${itemColor};" onchange="updateTaskField('${t.id}', 'priority', this.value)">
+                                        <option value="Lav" ${t.priority==='Lav'?'selected':''}>Lav</option>
+                                        <option value="Mellem" ${t.priority==='Mellem'?'selected':''}>Mellem</option>
+                                        <option value="Høj" ${t.priority==='Høj'?'selected':''}>Høj</option>
+                                    </select>
+                                </div>
+                                <div class="cal-menu-group">
+                                    <span class="cal-menu-label">Flyt Dag</span>
+                                    <select class="cal-quick-select" onchange="updateTaskField('${t.id}', 'plannedDay', this.value)">
+                                        <option value="Mandag-onsdag" ${t.plannedDay==='Mandag-onsdag'?'selected':''}>Man-Ons</option>
+                                        <option value="Torsdag" ${t.plannedDay==='Torsdag'?'selected':''}>Torsdag</option>
+                                        <option value="Fredag" ${t.plannedDay==='Fredag'?'selected':''}>Fredag</option>
+                                        <option value="Ikke planlagt" ${t.plannedDay==='Ikke planlagt'?'selected':''}>Fjern</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="cal-card-footer">
+                        <div class="cal-card-meta">
+                            <span style="font-weight:800; color:${itemColor};">${t.pct}%</span>
+                            ${hasNote ? '<i class="fa-solid fa-comment" style="color:var(--cyan-glow);" title="Har kommentar"></i>':''}
+                            ${subCount > 0 ? `<span class="cal-badge"><i class="fa-solid fa-list-check"></i> ${subDone}/${subCount}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            if (t.plannedDay === 'Mandag-onsdag') monWedList.innerHTML += itemHtml;
+            else if (t.plannedDay === 'Torsdag') thuList.innerHTML += itemHtml;
+            else if (t.plannedDay === 'Fredag') friList.innerHTML += itemHtml;
+        });
+
+        if (!monWedList.innerHTML) monWedList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Træk opgaver hertil</div>`;
+        if (!thuList.innerHTML) thuList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Træk opgaver hertil</div>`;
+        if (!friList.innerHTML) friList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Træk opgaver hertil</div>`;
+    }
+
+    function exportDataToFile() {
+        let dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(tasks, null, 4));
+        let downloadAnchor = document.createElement('a');
+        downloadAnchor.setAttribute("href", dataStr);
+        downloadAnchor.setAttribute("download", "opgaver_v2_backup.json");
+        document.body.appendChild(downloadAnchor);
+        downloadAnchor.click();
+        downloadAnchor.remove();
+    }
+    function triggerImportFile() { document.getElementById('backupFileInput').click(); }
+    function importDataFromFile(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                tasks = JSON.parse(e.target.result);
+                updateAllGaugesAndStats();
+                renderTasks();
+            } catch (err) { alert("Fejl ved indlæsning af filen."); }
+        };
+        reader.readAsText(file);
+    }
+</script>
+</body>
+</html>
