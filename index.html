@@ -3,87 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Task Cockpit v2.0 - Cyber Edition</title>
+    <title>Task Cockpit v2.0 - Crimson & Cyber Edition</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        :root, [data-theme="cyan"] { 
+        /* TEMA 1: VIBRANT CRIMSON (SORT & RØD) */
+        :root, [data-theme="crimson"] { 
+            --bg: #080203; 
+            --card-bg: #120508; 
+            --border-color: #2b0b12;
+            --border-glow: rgba(255, 0, 60, 0.4);
+            --header-bg: #18070b;
+            --input-bg: #0a0305;
+            --row-hover: #1f0a0f;
+            --cal-bg: #070204;
+            
+            --accent-primary: #ff003c;
+            --accent-glow: #ff2a5f;
+            --accent-subtle: rgba(255, 0, 60, 0.15);
+            --text-main: #fff0f3;
+            --text-muted: #9e6470;
+            --table-text: #e6c2c9;
+            --star-color: #f59e0b;
+        }
+
+        /* TEMA 2: CYBER CYAN */
+        [data-theme="cyan"] { 
             --bg: #070d14; 
             --card-bg: #0e1726; 
             --border-color: #1a293e;
-            --border-glow: rgba(6, 182, 212, 0.3);
+            --border-glow: rgba(6, 182, 212, 0.4);
             --header-bg: #111e33;
             --input-bg: #09111c;
             --row-hover: #132238;
             --cal-bg: #08101a;
             
-            --cyan-primary: #06b6d4;
-            --cyan-glow: #22d3ee;
+            --accent-primary: #06b6d4;
+            --accent-glow: #22d3ee;
+            --accent-subtle: rgba(6, 182, 212, 0.15);
             --text-main: #f0f9ff;
             --text-muted: #64748b;
             --table-text: #cbd5e1;
             --star-color: #f59e0b;
         }
 
+        /* TEMA 3: MIDNIGHT NAVY */
         [data-theme="navy"] {
             --bg: #0f172a;
             --card-bg: #1e293b;
             --border-color: #334155;
-            --border-glow: rgba(56, 189, 248, 0.3);
+            --border-glow: rgba(56, 189, 248, 0.4);
             --header-bg: #1e293b;
             --input-bg: #0f172a;
             --row-hover: #1e293b;
             --cal-bg: #090e1a;
             
-            --cyan-primary: #38bdf8;
-            --cyan-glow: #7dd3fc;
+            --accent-primary: #38bdf8;
+            --accent-glow: #7dd3fc;
+            --accent-subtle: rgba(56, 189, 248, 0.15);
             --text-main: #f1f5f9;
             --text-muted: #94a3b8;
             --table-text: #cbd5e1;
             --star-color: #fbbf24;
         }
 
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); margin: 0; padding: 20px; color: var(--text-main); transition: background 0.2s; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            padding: 20px; 
+            color: var(--text-main); 
+            transition: background 0.3s, color 0.3s; 
+        }
         .container { max-width: 1600px; margin: 0 auto; }
 
-        /* HEADER & TOP BAR */
-        .app-navigation { display: flex; align-items: center; justify-content: space-between; gap: 15px; background: var(--card-bg); padding: 12px 20px; border-radius: 12px; border: 1px solid var(--border-color); box-shadow: 0 4px 20px rgba(0,0,0,0.4); }
+        /* ACTIVE TASK TOP BANNER */
+        .active-timer-banner {
+            display: none;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(90deg, var(--header-bg), var(--card-bg));
+            border: 1px solid var(--accent-primary);
+            box-shadow: 0 0 15px var(--border-glow);
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            animation: pulseGlow 2s infinite alternate;
+        }
+        .active-timer-banner.visible { display: flex; }
+        @keyframes pulseGlow {
+            0% { box-shadow: 0 0 8px var(--border-glow); }
+            100% { box-shadow: 0 0 20px var(--border-glow); }
+        }
+        .timer-info { display: flex; align-items: center; gap: 12px; font-size: 0.95rem; font-weight: 700; }
+        .timer-info i { color: var(--accent-primary); font-size: 1.2rem; }
+        .timer-counter { font-size: 1.2rem; font-weight: 800; color: var(--accent-glow); font-variant-numeric: tabular-nums; }
+
+        /* HEADER & NAVIGATION */
+        .app-navigation { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            gap: 15px; 
+            background: var(--card-bg); 
+            padding: 12px 20px; 
+            border-radius: 12px; 
+            border: 1px solid var(--border-color); 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5); 
+        }
         .nav-left { display: flex; align-items: center; gap: 15px; }
         .nav-tabs { display: flex; gap: 8px; }
-        .nav-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 8px 16px; font-size: 0.9rem; font-weight: 700; border-radius: 8px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
-        .nav-btn:hover { color: var(--cyan-glow); background: var(--input-bg); }
-        .nav-btn.active { background: var(--input-bg); color: var(--cyan-glow); border-color: var(--cyan-primary); box-shadow: 0 0 10px var(--border-glow); }
+        .nav-btn { 
+            background: transparent; 
+            border: 1px solid transparent; 
+            color: var(--text-muted); 
+            padding: 8px 16px; 
+            font-size: 0.9rem; 
+            font-weight: 700; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            transition: all 0.2s; 
+        }
+        .nav-btn:hover { color: var(--accent-glow); background: var(--input-bg); }
+        .nav-btn.active { 
+            background: var(--input-bg); 
+            color: var(--accent-glow); 
+            border-color: var(--accent-primary); 
+            box-shadow: 0 0 10px var(--border-glow); 
+        }
 
         select.status-select, select.day-select, select.priority-select, select.period-dropdown, select.theme-select, select.filter-select, select.cal-quick-select { 
             background: var(--input-bg); 
             color: var(--text-main); 
             border: 1px solid var(--border-color); 
             border-radius: 6px; 
-            padding: 5px 10px; 
+            padding: 6px 10px; 
             font-size: 0.78rem; 
             font-weight: 600; 
             outline: none;
             cursor: pointer;
             transition: border-color 0.2s;
         }
-        select:focus { border-color: var(--cyan-primary); }
+        select:focus { border-color: var(--accent-primary); }
         select option { background-color: var(--card-bg) !important; color: var(--text-main) !important; }
 
         .nav-right { display: flex; align-items: center; gap: 15px; }
         .top-timer-compact { display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 5px 12px; border-radius: 8px; border: 1px solid var(--border-color); }
-        .top-time-display { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--cyan-glow); }
+        .top-time-display { font-size: 1.15rem; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--accent-glow); }
         .top-timer-setup input { width: 32px; background: transparent; border: none; color: var(--text-main); text-align: center; font-size: 0.85rem; font-weight: 600; }
         .btn-top-timer { border: none; padding: 5px 12px; border-radius: 6px; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: transform 0.1s; }
-        .btn-top-timer-start { background: var(--cyan-primary); color: #000; }
-        .btn-top-timer-start:hover { background: var(--cyan-glow); }
+        .btn-top-timer-start { background: var(--accent-primary); color: #fff; }
+        .btn-top-timer-start:hover { background: var(--accent-glow); }
         .btn-top-timer-reset { background: transparent; color: var(--text-muted); border: 1px solid var(--border-color); }
 
         .settings-wrapper { position: relative; }
         .btn-settings { background: var(--input-bg); color: var(--text-main); border: 1px solid var(--border-color); width: 38px; height: 38px; border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1rem; transition: border-color 0.2s; }
-        .btn-settings:hover { border-color: var(--cyan-primary); color: var(--cyan-glow); }
-        .settings-dropdown { display: none; position: absolute; right: 0; top: 48px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; width: 230px; box-shadow: 0 10px 30px rgba(0,0,0,0.6); z-index: 100; }
+        .btn-settings:hover { border-color: var(--accent-primary); color: var(--accent-glow); }
+        .settings-dropdown { display: none; position: absolute; right: 0; top: 48px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 10px; padding: 14px; width: 230px; box-shadow: 0 10px 30px rgba(0,0,0,0.8); z-index: 100; }
         .settings-dropdown.open { display: flex; flex-direction: column; gap: 12px; }
         .settings-item { background: transparent; border: none; color: var(--text-main); padding: 8px; font-size: 0.85rem; font-weight: 600; text-align: left; border-radius: 6px; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
-        .settings-item:hover { background: var(--input-bg); color: var(--cyan-glow); }
+        .settings-item:hover { background: var(--input-bg); color: var(--accent-glow); }
         
         .color-settings-section { border-top: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); padding: 10px 0; display: flex; flex-direction: column; gap: 8px; }
         .color-settings-title { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; }
@@ -100,7 +181,7 @@
         .top-progress-wrapper { margin: 12px 0 20px 0; background: var(--card-bg); border-radius: 10px; padding: 10px 16px; border: 1px solid var(--border-color); display: flex; flex-direction: column; gap: 6px; }
         .top-progress-header { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
         .top-progress-bar-bg { width: 100%; height: 6px; background: var(--input-bg); border-radius: 3px; overflow: hidden; }
-        .top-progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--cyan-primary), #10b981); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px var(--cyan-glow); }
+        .top-progress-bar-fill { height: 100%; background: linear-gradient(90deg, var(--accent-primary), var(--accent-glow)); width: 0%; transition: width 0.4s ease; box-shadow: 0 0 8px var(--border-glow); }
 
         .app-page { display: none; }
         .app-page.active-page { display: block; }
@@ -108,12 +189,12 @@
         /* KPI GAUGES */
         .cockpit-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px; }
         .gauge-card { background: var(--card-bg); padding: 14px 18px; border-radius: 12px; border: 1px solid var(--border-color); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: all 0.2s ease; }
-        .gauge-card:hover { border-color: var(--cyan-primary); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        .gauge-card:hover { border-color: var(--accent-primary); transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
         .gauge-title { font-size: 0.85rem; font-weight: 700; color: var(--text-main); }
         .gauge-sub { font-size: 0.7rem; color: var(--text-muted); margin-top: 2px; }
         .gauge-val-big { font-size: 1.5rem; font-weight: 800; }
         .g-done .gauge-val-big { color: #10b981; }
-        .g-active .gauge-val-big { color: var(--cyan-glow); }
+        .g-active .gauge-val-big { color: var(--accent-glow); }
         .g-late .gauge-val-big { color: #f43f5e; }
         .g-todo .gauge-val-big { color: #64748b; }
 
@@ -121,13 +202,25 @@
         .db-card { background: var(--card-bg); border-radius: 12px; padding: 18px; border: 1px solid var(--border-color); width: 100%; box-sizing: border-box; }
         .db-card-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text-muted); margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; }
 
+        /* TEMPLATES ROW */
+        .template-bar { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
+        .template-label { font-size: 0.75rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-right: 4px; }
+        .btn-template { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-main); padding: 5px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; gap: 6px; }
+        .btn-template:hover { border-color: var(--accent-primary); color: var(--accent-glow); background: var(--accent-subtle); }
+
         /* FROG LIST */
         .db-frog-list { display: flex; flex-direction: column; gap: 10px; width: 100%; }
         .db-frog-item { display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--input-bg); border-radius: 10px; border: 1px solid var(--border-color); gap: 15px; cursor: pointer; transition: all 0.2s; }
-        .db-frog-item:hover { border-color: var(--cyan-primary); transform: translateX(3px); }
+        .db-frog-item:hover { border-color: var(--accent-primary); transform: translateX(3px); }
         .db-frog-item-title strong { font-size: 0.95rem; font-weight: 700; color: var(--text-main); display: block; }
         .db-frog-progress-bg { height: 6px; background: var(--card-bg); border-radius: 3px; overflow: hidden; margin-top: 6px; width: 100%; max-width: 350px; }
         .db-frog-progress-fill { height: 100%; }
+
+        /* CALENDAR QUICK FILTER TAGS */
+        .cal-filter-tags { display: flex; gap: 6px; align-items: center; }
+        .tag-btn { background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-muted); font-size: 0.7rem; font-weight: 700; padding: 3px 8px; border-radius: 6px; cursor: pointer; transition: all 0.2s; }
+        .tag-btn:hover { color: var(--text-main); }
+        .tag-btn.active { background: var(--accent-subtle); border-color: var(--accent-primary); color: var(--accent-glow); }
 
         /* 3-COLUMN CALENDAR & DRAG/DROP */
         .calendar-3col-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; width: 100%; }
@@ -137,12 +230,12 @@
             padding: 14px; 
             border: 1px solid var(--border-color); 
             min-height: 220px; 
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
             transition: border-color 0.2s, background-color 0.2s;
         }
         .calendar-col.drag-over {
-            border-color: var(--cyan-glow);
-            background-color: rgba(6, 182, 212, 0.05);
+            border-color: var(--accent-glow);
+            background-color: var(--accent-subtle);
         }
 
         .calendar-col-title { 
@@ -150,7 +243,7 @@
             font-weight: 800; 
             text-transform: uppercase; 
             margin-bottom: 12px; 
-            color: var(--cyan-glow);
+            color: var(--accent-glow);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -167,15 +260,15 @@
             border-radius: 8px; 
             padding: 12px; 
             border: 1px solid var(--border-color); 
-            border-left: 5px solid var(--cyan-primary); 
+            border-left: 5px solid var(--accent-primary); 
             font-size: 0.85rem; 
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.4);
             transition: transform 0.15s, border-color 0.2s, opacity 0.2s;
             cursor: grab;
         }
         .cal-card-item:active { cursor: grabbing; }
         .cal-card-item.dragging { opacity: 0.4; transform: scale(0.98); }
-        .cal-card-item:hover { transform: translateY(-2px); border-color: var(--cyan-primary); }
+        .cal-card-item:hover { transform: translateY(-2px); border-color: var(--accent-primary); }
         .cal-card-item.status-done { opacity: 0.45; }
         .cal-card-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; margin-bottom: 8px; }
         .cal-card-title { font-weight: 700; line-height: 1.35; flex-grow: 1; }
@@ -184,7 +277,7 @@
         .cal-card-meta { display: flex; align-items: center; gap: 8px; }
         .cal-badge { font-size: 0.7rem; font-weight: 700; padding: 2px 6px; border-radius: 4px; background: var(--input-bg); border: 1px solid var(--border-color); color: var(--text-muted); }
 
-        /* DROPDOWN MENU IN CALENDAR CARD */
+        /* CONTEXT MENU / ACTION DROPDOWN IN CARD */
         .cal-menu-wrapper { position: relative; }
         .btn-cal-menu { 
             background: transparent; 
@@ -197,7 +290,7 @@
             line-height: 1;
             transition: color 0.2s;
         }
-        .btn-cal-menu:hover { color: var(--cyan-glow); background: var(--input-bg); }
+        .btn-cal-menu:hover { color: var(--accent-glow); background: var(--input-bg); }
         .cal-menu-dropdown { 
             display: none; 
             position: absolute; 
@@ -207,8 +300,8 @@
             border: 1px solid var(--border-color); 
             border-radius: 8px; 
             padding: 10px; 
-            width: 150px; 
-            box-shadow: 0 8px 25px rgba(0,0,0,0.6); 
+            width: 160px; 
+            box-shadow: 0 8px 25px rgba(0,0,0,0.8); 
             z-index: 50; 
             flex-direction: column; 
             gap: 8px; 
@@ -216,19 +309,41 @@
         .cal-menu-dropdown.open { display: flex; }
         .cal-menu-group { display: flex; flex-direction: column; gap: 4px; }
         .cal-menu-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); }
+        .cal-menu-btn-item {
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            padding: 5px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: background 0.2s;
+        }
+        .cal-menu-btn-item:hover { background: var(--accent-subtle); border-color: var(--accent-primary); color: var(--accent-glow); }
+
+        /* DENSE MODE COMPACT STYLES */
+        body.dense-mode { padding: 10px; }
+        body.dense-mode .gauge-card { padding: 8px 12px; }
+        body.dense-mode .cal-card-item { padding: 8px; }
+        body.dense-mode td { padding: 6px 10px; }
 
         /* TABLE SLIM */
         .controls-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 14px; }
         .search-input { width: 100%; max-width: 300px; padding: 8px 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-main); font-size: 0.85rem; outline: none; }
-        .search-input:focus { border-color: var(--cyan-primary); }
-        .task-list { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+        .search-input:focus { border-color: var(--accent-primary); }
+        .task-list { background: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.5); }
         table { width: 100%; border-collapse: collapse; }
         th { background: var(--header-bg); padding: 12px; text-align: left; font-size: 0.72rem; color: var(--text-muted); text-transform: uppercase; border-bottom: 1px solid var(--border-color); letter-spacing: 0.5px; }
         td { padding: 10px 12px; border-bottom: 1px solid var(--border-color); font-size: 0.85rem; color: var(--table-text); }
         tr:hover { background-color: var(--row-hover); }
 
         .task-name-click { cursor: pointer; display: flex; align-items: center; gap: 8px; }
-        .task-name-click:hover { text-decoration: underline; color: var(--cyan-glow); }
+        .task-name-click:hover { text-decoration: underline; color: var(--accent-glow); }
 
         input[type="text"], input[type="date"], input[type="number"] { border: none; background: transparent; color: var(--text-main); font-size: 0.85rem; font-family: inherit; }
         input[type="text"]:focus, input[type="date"]:focus { outline: none; background: var(--input-bg); border-radius: 4px; }
@@ -243,39 +358,52 @@
         .btn-task-timer { background: transparent; border: none; font-size: 0.85rem; cursor: pointer; color: var(--text-muted); transition: color 0.2s; }
         .btn-task-timer.running { color: #f43f5e; }
 
-        .btn-add { background: var(--cyan-primary); color: #000; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
-        .btn-add:hover { background: var(--cyan-glow); }
+        .btn-add { background: var(--accent-primary); color: #fff; border: none; padding: 8px 18px; border-radius: 8px; font-weight: 700; font-size: 0.85rem; cursor: pointer; transition: background 0.2s; }
+        .btn-add:hover { background: var(--accent-glow); }
         .btn-backup-action { background: transparent; border: 1px solid var(--border-color); color: var(--text-muted); padding: 6px 12px; border-radius: 6px; font-size: 0.75rem; cursor: pointer; }
 
-        /* MODAL TIL KOMMENTAR OG CHECKLISTE */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        /* MODAL */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
         .modal-overlay.open { display: flex; }
-        .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; width: 100%; max-width: 600px; padding: 22px; box-shadow: 0 15px 40px rgba(0,0,0,0.7); display: flex; flex-direction: column; gap: 16px; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.15rem; color: var(--cyan-glow); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
+        .modal-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; width: 100%; max-width: 600px; padding: 22px; box-shadow: 0 15px 40px rgba(0,0,0,0.9); display: flex; flex-direction: column; gap: 16px; }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 1.15rem; color: var(--accent-glow); border-bottom: 1px solid var(--border-color); padding-bottom: 12px; }
         .modal-close { background: none; border: none; color: var(--text-muted); font-size: 1.3rem; cursor: pointer; transition: color 0.2s; }
         .modal-close:hover { color: var(--text-main); }
         .modal-textarea { width: 100%; height: 110px; background: var(--input-bg); border: 1px solid var(--border-color); border-radius: 8px; padding: 12px; color: var(--text-main); font-family: inherit; font-size: 0.9rem; resize: vertical; box-sizing: border-box; outline: none; }
-        .modal-textarea:focus { border-color: var(--cyan-primary); }
+        .modal-textarea:focus { border-color: var(--accent-primary); }
 
         /* CHECKLIST IN MODAL */
         .checklist-section { display: flex; flex-direction: column; gap: 8px; border-top: 1px solid var(--border-color); padding-top: 12px; }
         .checklist-title { font-size: 0.75rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); display: flex; justify-content: space-between; }
         .checklist-items { display: flex; flex-direction: column; gap: 6px; max-height: 150px; overflow-y: auto; }
         .checklist-item { display: flex; align-items: center; gap: 10px; background: var(--input-bg); padding: 6px 10px; border-radius: 6px; border: 1px solid var(--border-color); }
-        .checklist-item input[type="checkbox"] { accent-color: var(--cyan-primary); cursor: pointer; }
+        .checklist-item input[type="checkbox"] { accent-color: var(--accent-primary); cursor: pointer; }
         .checklist-item input[type="text"] { flex-grow: 1; font-size: 0.85rem; color: var(--text-main); }
         .btn-remove-subtask { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.8rem; }
         .btn-remove-subtask:hover { color: #f43f5e; }
-        .btn-add-subtask { background: transparent; border: 1px dashed var(--border-color); color: var(--cyan-primary); padding: 6px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: center; margin-top: 4px; }
-        .btn-add-subtask:hover { background: var(--input-bg); border-color: var(--cyan-primary); }
+        .btn-add-subtask { background: transparent; border: 1px dashed var(--border-color); color: var(--accent-primary); padding: 6px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer; text-align: center; margin-top: 4px; }
+        .btn-add-subtask:hover { background: var(--input-bg); border-color: var(--accent-primary); }
 
         .modal-footer { display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 12px; }
-        .btn-modal-save { background: var(--cyan-primary); color: #000; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; }
-        .btn-modal-save:hover { background: var(--cyan-glow); }
+        .btn-modal-save { background: var(--accent-primary); color: #fff; border: none; padding: 8px 18px; border-radius: 6px; font-weight: 700; cursor: pointer; }
+        .btn-modal-save:hover { background: var(--accent-glow); }
     </style>
 </head>
 <body>
 <div class="container">
+
+    <!-- AKTIV TASK TIMER TOP BANNER -->
+    <div class="active-timer-banner" id="activeTimerBanner">
+        <div class="timer-info">
+            <i class="fa-solid fa-stopwatch fa-spin"></i>
+            <span>Aktiv opgave igang: <strong id="activeTaskNameDisplay">-</strong></span>
+        </div>
+        <div style="display:flex; align-items:center; gap:15px;">
+            <div class="timer-counter" id="activeTaskTimeCounter">00:00:00</div>
+            <button class="btn-top-timer btn-top-timer-reset" onclick="stopActiveTaskTimer()"><i class="fa-solid fa-stop"></i> Stop timer</button>
+        </div>
+    </div>
+
     <!-- TOP NAVIGATION & CONTROLS -->
     <div class="app-navigation">
         <div class="nav-left">
@@ -292,7 +420,7 @@
         </div>
 
         <div class="nav-right">
-            <!-- TIMER -->
+            <!-- GENERAL POMODORO TIMER -->
             <div class="top-timer-compact">
                 <div class="top-time-display" id="timeDisplay">25:00</div>
                 <div class="top-timer-setup">
@@ -302,23 +430,29 @@
                 <button class="btn-top-timer btn-top-timer-start" id="startTimerBtn" onclick="toggleTimer()">Start</button>
             </div>
 
-            <!-- SETTINGS -->
+            <!-- SETTINGS MENU -->
             <div class="settings-wrapper">
                 <button class="btn-settings" onclick="toggleSettingsMenu()"><i class="fa-solid fa-gear"></i></button>
                 <div class="settings-dropdown" id="settingsDropdown">
                     <div style="display:flex; flex-direction:column; gap:4px;">
                         <span class="color-settings-title">Vælg Tema</span>
                         <select class="theme-select" onchange="changeTheme(this.value)">
+                            <option value="crimson">Vibrant Crimson (Sort & Rød)</option>
                             <option value="cyan">Cyber Cyan</option>
                             <option value="navy">Midnight Navy</option>
                         </select>
+                    </div>
+
+                    <div style="display:flex; justify-content:space-between; align-items:center; padding: 4px 0;">
+                        <span class="color-settings-title" style="margin:0;">Kompakt Visning</span>
+                        <input type="checkbox" id="denseModeToggle" onchange="toggleDenseMode(this.checked)">
                     </div>
 
                     <div class="color-settings-section">
                         <div class="color-settings-title">Prioritets-farver</div>
                         <div class="color-row">
                             <span style="color:var(--text-main);">Lav</span>
-                            <input type="color" id="colorPickerLav" class="color-picker-input" value="#06b6d4" onchange="updatePriorityColor('Lav', this.value)">
+                            <input type="color" id="colorPickerLav" class="color-picker-input" value="#ff003c" onchange="updatePriorityColor('Lav', this.value)">
                         </div>
                         <div class="color-row">
                             <span style="color:var(--text-main);">Mellem</span>
@@ -382,6 +516,17 @@
         </div>
 
         <div class="dashboard-full-container">
+            <!-- HURTIG-SKABELONER -->
+            <div class="db-card" style="padding:12px 18px;">
+                <div class="template-bar">
+                    <span class="template-label"><i class="fa-solid fa-bolt"></i> Hurtig-Skabeloner:</span>
+                    <button class="btn-template" onclick="createFromTemplate('6s')"><i class="fa-solid fa-plus"></i> 6S Audit</button>
+                    <button class="btn-template" onclick="createFromTemplate('esop')"><i class="fa-solid fa-plus"></i> eSOP Opdatering</button>
+                    <button class="btn-template" onclick="createFromTemplate('slr')"><i class="fa-solid fa-plus"></i> Slr Måling</button>
+                    <button class="btn-template" onclick="createFromTemplate('apv')"><i class="fa-solid fa-plus"></i> APV Opfølgning</button>
+                </div>
+            </div>
+
             <!-- FOKUSOPGAVER -->
             <div class="db-card">
                 <div class="db-card-title"><span><i class="fa-solid fa-star" style="color:var(--star-color);"></i> Mit primære fokus</span></div>
@@ -391,10 +536,20 @@
             <!-- 3-COL CALENDAR -->
             <div class="db-card">
                 <div class="db-card-title">
-                    <span><i class="fa-solid fa-calendar-week"></i> Ugeplan (Træk opgaver til dagene)</span>
-                    <button onclick="toggleHideCalDone()" id="btnHideCalDone" style="background:transparent; color:var(--text-muted); border:none; font-size:0.7rem; cursor:pointer;">
-                        <i class="fa-solid fa-eye-slash"></i> Skjul færdige
-                    </button>
+                    <span><i class="fa-solid fa-calendar-week"></i> Ugeplan</span>
+                    
+                    <!-- QUICK FILTER TAGS -->
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <div class="cal-filter-tags">
+                            <button class="tag-btn active" id="tag-all" onclick="setCalFilter('all')">Alle</button>
+                            <button class="tag-btn" id="tag-star" onclick="setCalFilter('star')">⭐ Fokus</button>
+                            <button class="tag-btn" id="tag-hoj" onclick="setCalFilter('hoj')">🔥 Høj</button>
+                            <button class="tag-btn" id="tag-note" onclick="setCalFilter('note')">💬 Kommentar</button>
+                        </div>
+                        <button onclick="toggleHideCalDone()" id="btnHideCalDone" style="background:transparent; color:var(--text-muted); border:none; font-size:0.7rem; cursor:pointer;">
+                            <i class="fa-solid fa-eye-slash"></i> Skjul færdige
+                        </button>
+                    </div>
                 </div>
                 <div class="calendar-3col-grid">
                     <div class="calendar-col" id="col-Mandag-onsdag" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 'Mandag-onsdag')">
@@ -461,7 +616,7 @@
         </div>
         <textarea id="modalNoteInput" class="modal-textarea" placeholder="Skriv din kommentar eller detaljerede beskrivelse her..."></textarea>
         
-        <!-- UNDEROPGAVER / CHECKLISTE -->
+        <!-- CHECKLISTE IN MODAL -->
         <div class="checklist-section">
             <div class="checklist-title">
                 <span><i class="fa-solid fa-list-check"></i> Underopgaver / Checkliste</span>
@@ -479,13 +634,13 @@
 
 <script>
     let priorityColors = {
-        "Lav": "#06b6d4",
+        "Lav": "#ff003c",
         "Mellem": "#f59e0b",
         "Høj": "#f43f5e"
     };
 
     let tasks = [
-        {"id":"t1","name":"Overvågning og tømning afdontank","responsible":true,"status":"Igangsat","priority":"Lav","date":"2026-09-02","pct":25,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t1","name":"Overvågning og tømning af betontank","responsible":true,"status":"Igangsat","priority":"Lav","date":"2026-09-02","pct":25,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
         {"id":"t2","name":"Ændringer til esop måske","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-09-07","pct":10,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
         {"id":"t3","name":"Slr måling","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-09-02","pct":0,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
         {"id":"t4","name":"7 - Ovnbygning: Dæk 2+3 - 6S - Nødvendige eSOPs ikke opdateret","responsible":true,"status":"Igangsat","priority":"Mellem","date":"2026-09-02","pct":0,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
@@ -506,6 +661,7 @@
     let dashboardPeriodDays = 90;
     let hideCalDone = false;
     let currentKpiFilter = null;
+    let calFilterTag = "all";
     let searchQuery = "";
     let activeEditingTaskId = null;
     let draggedTaskId = null;
@@ -517,6 +673,7 @@
 
     let taskTimerInterval = null;
     let runningTaskId = null;
+    let runningTaskElapsedSeconds = 0;
 
     window.onload = function() {
         tasks.forEach(t => {
@@ -541,6 +698,11 @@
 
     function changeTheme(themeName) {
         document.body.setAttribute('data-theme', themeName);
+    }
+
+    function toggleDenseMode(isDense) {
+        if(isDense) document.body.classList.add('dense-mode');
+        else document.body.classList.remove('dense-mode');
     }
 
     function toggleSettingsMenu() {
@@ -590,6 +752,75 @@
             updateTaskField(draggedTaskId, 'plannedDay', newDay);
             draggedTaskId = null;
         }
+    }
+
+    /* SNOOZE / SKUB OPGAVE */
+    function snoozeTask(taskId, days) {
+        let task = tasks.find(t => t.id === taskId);
+        if(task) {
+            let currentDate = new Date(task.date);
+            currentDate.setDate(currentDate.getDate() + days);
+            task.date = currentDate.toISOString().split('T')[0];
+            renderTasks();
+            updateAllGaugesAndStats();
+        }
+    }
+
+    function parkTask(taskId) {
+        updateTaskField(taskId, 'plannedDay', 'Ikke planlagt');
+    }
+
+    /* QUICK FILTER TAGS ON CALENDAR */
+    function setCalFilter(tag) {
+        calFilterTag = tag;
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        document.getElementById(`tag-${tag}`).classList.add('active');
+        updateAllGaugesAndStats();
+    }
+
+    /* HURTIG-SKABELONER */
+    function createFromTemplate(type) {
+        let newId = "t" + (tasks.length + 1);
+        let today = new Date().toISOString().split('T')[0];
+        let newTask = { id: newId, name: "", responsible: true, status: "Igangsat", priority: "Mellem", date: today, pct: 0, note: "", isFrog: false, plannedDay: "Mandag-onsdag", hours: 0, subtasks: [] };
+
+        if(type === '6s') {
+            newTask.name = "6S Audit & Standardisering";
+            newTask.priority = "Mellem";
+            newTask.subtasks = [
+                { title: "Gennemgå område for 6S afvigelser", done: false },
+                { title: "Fotografér & dokumentér mangler", done: false },
+                { title: "Opdatér 6S board", done: false }
+            ];
+        } else if(type === 'esop') {
+            newTask.name = "eSOP Opdatering & Visuel Kontrol";
+            newTask.priority = "Høj";
+            newTask.subtasks = [
+                { title: "Gennemlæs eksisterende eSOP", done: false },
+                { title: "Inkorporér nye instruktioner / billeder", done: false },
+                { title: "Send til godkendelse", done: false }
+            ];
+        } else if(type === 'slr') {
+            newTask.name = "Slr Måling & Registrering";
+            newTask.priority = "Høj";
+            newTask.isFrog = true;
+            newTask.subtasks = [
+                { title: "Klargør måleudstyr", done: false },
+                { title: "Udfør 3x kontrolmålinger", done: false },
+                { title: "Indtast i måleskema", done: false }
+            ];
+        } else if(type === 'apv') {
+            newTask.name = "APV Opfølgning & Aktioner";
+            newTask.priority = "Lav";
+            newTask.subtasks = [
+                { title: "Review af APV handlingsplan", done: false },
+                { title: "Afstem status med team", done: false }
+            ];
+        }
+
+        tasks.unshift(newTask);
+        renderTasks();
+        updateAllGaugesAndStats();
     }
 
     /* MODAL & SUBTASKS */
@@ -686,7 +917,7 @@
     }
 
     function getTaskColor(priority) {
-        return priorityColors[priority] || "#06b6d4";
+        return priorityColors[priority] || "#ff003c";
     }
 
     function setDashboardPeriod(val) {
@@ -710,6 +941,7 @@
         updateAllGaugesAndStats();
     }
 
+    /* POMODORO TIMER */
     function updateDuration() {
         if(timerRunning) return;
         let mins = parseInt(document.getElementById('minutesInput').value) || 25;
@@ -730,7 +962,7 @@
             clearInterval(timerInterval);
             timerRunning = false;
             btn.innerText = "Start";
-            btn.style.background = "var(--cyan-primary)";
+            btn.style.background = "var(--accent-primary)";
         } else {
             timerRunning = true;
             btn.innerText = "Pause";
@@ -756,30 +988,50 @@
         displayTimer();
         const btn = document.getElementById('startTimerBtn');
         btn.innerText = "Start";
-        btn.style.background = "var(--cyan-primary)";
+        btn.style.background = "var(--accent-primary)";
     }
 
+    /* TASK STOPWATCH TIMER WITH TOP BANNER */
     function toggleTaskTimer(id) {
         if (runningTaskId === id) {
-            clearInterval(taskTimerInterval);
-            runningTaskId = null;
-            renderTasks();
-            updateAllGaugesAndStats();
+            stopActiveTaskTimer();
             return;
         }
         if (runningTaskId !== null) clearInterval(taskTimerInterval);
         runningTaskId = id;
+        
+        let task = tasks.find(t => t.id === runningTaskId);
+        if(task) {
+            document.getElementById('activeTaskNameDisplay').innerText = task.name;
+            document.getElementById('activeTimerBanner').classList.add('visible');
+        }
+
         renderTasks();
         updateAllGaugesAndStats();
 
         taskTimerInterval = setInterval(() => {
-            let task = tasks.find(t => t.id === runningTaskId);
-            if (task) {
-                task.hours = parseFloat(((task.hours || 0) + (1 / 3600)).toFixed(4));
-                let displayDashboard = document.getElementById(`dash-timer-text-${task.id}`);
-                if(displayDashboard) displayDashboard.innerText = formatHours(task.hours);
+            let t = tasks.find(x => x.id === runningTaskId);
+            if (t) {
+                t.hours = parseFloat(((t.hours || 0) + (1 / 3600)).toFixed(4));
+                let seconds = Math.floor((t.hours || 0) * 3600);
+                let h = Math.floor(seconds / 3600);
+                let m = Math.floor((seconds % 3600) / 60);
+                let s = seconds % 60;
+                let formattedStr = `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+                
+                document.getElementById('activeTaskTimeCounter').innerText = formattedStr;
+                let displayDashboard = document.getElementById(`dash-timer-text-${t.id}`);
+                if(displayDashboard) displayDashboard.innerText = formatHours(t.hours);
             }
         }, 1000);
+    }
+
+    function stopActiveTaskTimer() {
+        clearInterval(taskTimerInterval);
+        runningTaskId = null;
+        document.getElementById('activeTimerBanner').classList.remove('visible');
+        renderTasks();
+        updateAllGaugesAndStats();
     }
 
     function formatHours(h) {
@@ -873,7 +1125,7 @@
                     <td>
                         <div class="task-name-click" onclick="openNoteModal('${t.id}')">
                             <input type="text" value="${t.name}" style="width:100%; font-weight:600;" onchange="updateTaskField('${t.id}', 'name', this.value)" onclick="event.stopPropagation()">
-                            ${hasNote ? '<i class="fa-solid fa-comment" style="color:var(--cyan-glow); font-size:0.8rem;" title="Har kommentar"></i>' : ''}
+                            ${hasNote ? '<i class="fa-solid fa-comment" style="color:var(--accent-glow); font-size:0.8rem;" title="Har kommentar"></i>' : ''}
                             ${subCount > 0 ? `<span class="cal-badge"><i class="fa-solid fa-list-check"></i> ${subDone}/${subCount}</span>` : ''}
                         </div>
                     </td>
@@ -949,7 +1201,7 @@
                 <div class="db-frog-item" onclick="openNoteModal('${f.id}')">
                     <div style="flex-grow:1;">
                         <div class="db-frog-item-title">
-                            <strong>${f.name} ${hasNote ? '<i class="fa-solid fa-comment" style="font-size:0.8rem; color:var(--cyan-glow);"></i>':''}</strong>
+                            <strong>${f.name} ${hasNote ? '<i class="fa-solid fa-comment" style="font-size:0.8rem; color:var(--accent-glow);"></i>':''}</strong>
                         </div>
                         <div style="font-size:0.75rem; color:var(--text-muted); margin-top:4px; display:flex; gap:10px; align-items:center;">
                             <span>Dato: ${f.date}</span>
@@ -979,6 +1231,12 @@
 
         zoneTasks.forEach(t => {
             if(hideCalDone && t.status === 'Fuldført') return;
+
+            // QUICK TAG FILTER LOGIC
+            if(calFilterTag === 'star' && !t.isFrog) return;
+            if(calFilterTag === 'hoj' && t.priority !== 'Høj') return;
+            if(calFilterTag === 'note' && (!t.note || !t.note.trim())) return;
+
             let isDone = t.status === 'Fuldført';
             let itemColor = getTaskColor(t.priority);
             let hasNote = t.note && t.note.trim() !== "";
@@ -1013,13 +1271,18 @@
                                         <option value="Ikke planlagt" ${t.plannedDay==='Ikke planlagt'?'selected':''}>Fjern</option>
                                     </select>
                                 </div>
+                                <div class="cal-menu-group" style="border-top:1px solid var(--border-color); padding-top:4px;">
+                                    <span class="cal-menu-label">Hurtige Handlinger</span>
+                                    <button class="cal-menu-btn-item" onclick="snoozeTask('${t.id}', 7)"><i class="fa-solid fa-forward"></i> Skub +1 Uge</button>
+                                    <button class="cal-menu-btn-item" onclick="parkTask('${t.id}')"><i class="fa-solid fa-box-archive"></i> Parkér</button>
+                                </div>
                             </div>
                         </div>
                     </div>
                     <div class="cal-card-footer">
                         <div class="cal-card-meta">
                             <span style="font-weight:800; color:${itemColor};">${t.pct}%</span>
-                            ${hasNote ? '<i class="fa-solid fa-comment" style="color:var(--cyan-glow);" title="Har kommentar"></i>':''}
+                            ${hasNote ? '<i class="fa-solid fa-comment" style="color:var(--accent-glow);" title="Har kommentar"></i>':''}
                             ${subCount > 0 ? `<span class="cal-badge"><i class="fa-solid fa-list-check"></i> ${subDone}/${subCount}</span>` : ''}
                         </div>
                     </div>
@@ -1030,9 +1293,9 @@
             else if (t.plannedDay === 'Fredag') friList.innerHTML += itemHtml;
         });
 
-        if (!monWedList.innerHTML) monWedList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Træk opgaver hertil</div>`;
-        if (!thuList.innerHTML) thuList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Træk opgaver hertil</div>`;
-        if (!friList.innerHTML) friList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Træk opgaver hertil</div>`;
+        if (!monWedList.innerHTML) monWedList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Ingen opgaver</div>`;
+        if (!thuList.innerHTML) thuList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Ingen opgaver</div>`;
+        if (!friList.innerHTML) friList.innerHTML = `<div style="opacity:0.3; font-size:0.75rem; text-align:center; padding-top:20px;">Ingen opgaver</div>`;
     }
 
     function exportDataToFile() {
