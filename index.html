@@ -49,13 +49,13 @@
 
     /* VENSTRE NAVIGATION */
     .sidebar {
-      width: 340px;
+      width: 345px;
       background-color: var(--bg-sidebar);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 24px 16px;
+      padding: 22px 16px;
       flex-shrink: 0;
       position: sticky;
       top: 0;
@@ -64,9 +64,9 @@
     }
 
     .brand {
-      padding: 0 10px 18px;
+      padding: 0 10px 16px;
       border-bottom: 1px solid var(--border);
-      margin-bottom: 16px;
+      margin-bottom: 14px;
     }
 
     .brand-eyebrow {
@@ -75,7 +75,7 @@
       letter-spacing: 0.08em;
       color: var(--accent);
       font-weight: 700;
-      margin-bottom: 4px;
+      margin-bottom: 3px;
     }
 
     .brand h1 {
@@ -102,10 +102,10 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 11px 12px;
+      padding: 10px 12px;
       border-radius: 10px;
       cursor: pointer;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       text-align: left;
       transition: background 0.15s, color 0.15s;
       gap: 10px;
@@ -143,13 +143,18 @@
     }
 
     .count-badge {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--text-secondary);
       background: rgba(255, 255, 255, 0.06);
       padding: 2px 9px;
       border-radius: 999px;
       flex-shrink: 0;
       font-weight: 600;
+    }
+
+    .count-badge.warn {
+      background: rgba(248, 113, 113, 0.18);
+      color: #fca5a5;
     }
 
     .nav-btn.active .count-badge {
@@ -159,10 +164,10 @@
 
     .sidebar-footer {
       border-top: 1px solid var(--border);
-      padding-top: 14px;
+      padding-top: 12px;
       display: flex;
       flex-direction: column;
-      gap: 4px;
+      gap: 3px;
     }
 
     /* SKRIFTSTØRRELSE KONTROL */
@@ -170,11 +175,11 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 12px;
+      padding: 7px 12px;
       margin-bottom: 6px;
       background: var(--bg-elevated);
       border-radius: 9px;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-secondary);
     }
 
@@ -187,9 +192,9 @@
       background: var(--bg-main);
       border: 1px solid var(--border-strong);
       color: var(--text-primary);
-      padding: 4px 10px;
+      padding: 3px 10px;
       border-radius: 6px;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       cursor: pointer;
     }
@@ -201,9 +206,9 @@
     /* HOVEDOMRÅDE */
     .main {
       flex: 1;
-      max-width: 1080px;
+      max-width: 1120px;
       margin: 0 auto;
-      padding: 32px 38px 80px;
+      padding: 30px 38px 80px;
       width: 100%;
     }
 
@@ -232,8 +237,8 @@
       background-color: var(--bg-elevated);
       border: 1px solid var(--border-strong);
       border-radius: 14px;
-      padding: 20px 22px;
-      margin-bottom: 32px;
+      padding: 18px 22px;
+      margin-bottom: 26px;
       transition: border-color 0.2s;
     }
 
@@ -247,9 +252,9 @@
       border: none;
       outline: none;
       color: var(--text-primary);
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 500;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
 
     .spotlight-input::placeholder {
@@ -261,8 +266,8 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: space-between;
-      gap: 12px;
-      padding-top: 14px;
+      gap: 10px;
+      padding-top: 12px;
       border-top: 1px solid var(--border);
     }
 
@@ -270,7 +275,7 @@
       display: flex;
       flex-wrap: wrap;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
     }
 
     .cat-pill-btn {
@@ -282,7 +287,7 @@
       color: var(--text-primary);
       padding: 7px 14px;
       border-radius: 999px;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       font-weight: 500;
       cursor: pointer;
       transition: background 0.15s;
@@ -303,7 +308,7 @@
       color: var(--text-primary);
       border-radius: 8px;
       padding: 7px 11px;
-      font-size: 0.85rem;
+      font-size: 0.84rem;
       outline: none;
       color-scheme: dark;
     }
@@ -318,7 +323,7 @@
       border: none;
       padding: 8px 18px;
       border-radius: 9px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       font-weight: 600;
       cursor: pointer;
       transition: opacity 0.15s;
@@ -328,26 +333,53 @@
       opacity: 0.9;
     }
 
-    /* VIEW HEADER */
+    /* VIEW HEADER & FILTER-BJÆLKE */
     .view-header {
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      margin-bottom: 20px;
+      margin-bottom: 14px;
       gap: 14px;
       flex-wrap: wrap;
     }
 
     .view-title {
-      font-size: 1.45rem;
+      font-size: 1.42rem;
       font-weight: 700;
       letter-spacing: -0.015em;
     }
 
     .view-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-secondary);
-      margin-top: 3px;
+      margin-top: 2px;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .report-btn {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border-strong);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: 9px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: border-color 0.15s, background 0.15s;
+    }
+
+    .report-btn:hover {
+      border-color: var(--accent);
+      background: var(--bg-hover);
     }
 
     .search-bar {
@@ -356,13 +388,56 @@
       color: var(--text-primary);
       padding: 8px 14px;
       border-radius: 9px;
-      font-size: 0.9rem;
-      width: 250px;
+      font-size: 0.88rem;
+      width: 230px;
       outline: none;
     }
 
     .search-bar:focus {
       border-color: var(--accent);
+    }
+
+    .filter-strip {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border);
+      border-radius: 11px;
+      margin-bottom: 16px;
+    }
+
+    .filter-chips {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 7px;
+    }
+
+    .filter-chip {
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      padding: 4px 11px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .filter-chip:hover {
+      color: var(--text-primary);
+      border-color: var(--text-secondary);
+    }
+
+    .filter-chip.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--text-primary);
+      font-weight: 600;
     }
 
     /* OPGAVELISTE */
@@ -383,7 +458,7 @@
     }
 
     .task-row:hover {
-      background-color: rgba(255, 255, 255, 0.03);
+      background-color: rgba(255, 255, 255, 0.025);
     }
 
     .task-left {
@@ -427,8 +502,15 @@
       min-width: 0;
     }
 
+    .task-title-line {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
     .task-title {
-      font-size: 1.05rem;
+      font-size: 1.04rem;
       font-weight: 500;
       color: var(--text-primary);
       word-break: break-word;
@@ -453,6 +535,26 @@
       color: var(--text-muted);
     }
 
+    .due-badge {
+      font-size: 0.74rem;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .due-overdue {
+      background: rgba(248, 113, 113, 0.18);
+      color: #fca5a5;
+      border: 1px solid rgba(248, 113, 113, 0.35);
+    }
+
+    .due-soon {
+      background: rgba(251, 191, 36, 0.16);
+      color: #fde047;
+      border: 1px solid rgba(251, 191, 36, 0.35);
+    }
+
     /* DIREKTE REDIGERBAR METADATA-LINJE */
     .task-meta {
       display: flex;
@@ -460,7 +562,7 @@
       align-items: center;
       gap: 8px;
       margin-top: 9px;
-      font-size: 0.82rem;
+      font-size: 0.81rem;
     }
 
     .inline-meta-field {
@@ -481,15 +583,15 @@
 
     .inline-meta-label {
       color: var(--text-muted);
-      font-size: 0.76rem;
+      font-size: 0.75rem;
     }
 
     .inline-board-input {
       background: transparent;
       border: none;
       color: var(--text-primary);
-      font-size: 0.82rem;
-      width: 110px;
+      font-size: 0.81rem;
+      width: 105px;
       outline: none;
       font-family: inherit;
     }
@@ -498,18 +600,36 @@
       background: transparent;
       border: none;
       color: var(--text-primary);
-      font-size: 0.82rem;
+      font-size: 0.81rem;
       outline: none;
       font-family: inherit;
       cursor: pointer;
       color-scheme: dark;
     }
 
+    .plus-week-btn {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--border-strong);
+      color: var(--text-secondary);
+      font-size: 0.74rem;
+      font-weight: 600;
+      padding: 1px 6px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-left: 2px;
+    }
+
+    .plus-week-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
     .inline-select {
       background: transparent;
       border: none;
       color: var(--text-primary);
-      font-size: 0.82rem;
+      font-size: 0.81rem;
       outline: none;
       font-family: inherit;
       cursor: pointer;
@@ -547,6 +667,49 @@
       font-weight: 600;
     }
 
+    .note-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      padding: 3px 9px;
+      border-radius: 7px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .note-toggle-btn:hover {
+      border-color: var(--border-strong);
+      color: var(--text-primary);
+    }
+
+    .note-toggle-btn.has-note {
+      border-color: rgba(52, 211, 153, 0.4);
+      color: #6ee7b7;
+      background: rgba(52, 211, 153, 0.08);
+    }
+
+    .task-note-box {
+      margin-top: 10px;
+      width: 100%;
+      background: var(--bg-sidebar);
+      border: 1px solid var(--border-strong);
+      border-radius: 8px;
+      padding: 8px 11px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 0.85rem;
+      resize: vertical;
+      min-height: 58px;
+      outline: none;
+    }
+
+    .task-note-box:focus {
+      border-color: var(--accent);
+    }
+
     .task-right {
       display: flex;
       align-items: center;
@@ -558,12 +721,12 @@
       background: var(--bg-sidebar);
       border: 1px solid var(--border-strong);
       color: var(--text-primary);
-      font-size: 0.82rem;
+      font-size: 0.81rem;
       padding: 6px 10px;
       border-radius: 999px;
       cursor: pointer;
       outline: none;
-      max-width: 230px;
+      max-width: 235px;
     }
 
     .row-cat-select:hover {
@@ -658,10 +821,35 @@
       gap: 10px;
     }
 
-    @media (max-width: 900px) {
+    /* TOAST BEKRÆFTELSE */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--accent);
+      color: var(--text-primary);
+      padding: 12px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+      z-index: 100;
+      opacity: 0;
+      transform: translateY(10px);
+      pointer-events: none;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    @media (max-width: 920px) {
       .sidebar {
         position: fixed;
-        left: -350px;
+        left: -355px;
         z-index: 50;
         transition: left 0.22s ease;
       }
@@ -701,6 +889,11 @@
         <span class="count-badge" id="count-all">0</span>
       </button>
 
+      <button class="nav-btn" data-view="urgent" onclick="setView('urgent')">
+        <span class="nav-left"><span class="dot" style="background: #f87171"></span><span class="label">Forfaldne &amp; Næste 7 dage</span></span>
+        <span class="count-badge warn" id="count-urgent">0</span>
+      </button>
+
       <div class="nav-section-label">Arbejdsbeskrivelse</div>
       <div id="category-nav"></div>
     </div>
@@ -720,6 +913,9 @@
       </button>
       <button class="nav-btn" data-view="keywords" onclick="setView('keywords')">
         <span class="nav-left"><span class="dot" style="background: #34d399"></span><span class="label">Nøgleord &amp; Regler</span></span>
+      </button>
+      <button class="nav-btn" onclick="copyStatusReport()">
+        <span class="nav-left"><span class="dot" style="background: #fbbf24"></span><span class="label">Kopiér statusrapport</span></span>
       </button>
       <button class="nav-btn" onclick="exportJSON()">
         <span class="nav-left"><span class="dot" style="background: #60a5fa"></span><span class="label">Eksportér JSON backup</span></span>
@@ -747,7 +943,7 @@
         type="text"
         id="task-input"
         class="spotlight-input"
-        placeholder="Hvad skal der følges op på? (Skriv f.eks. eSOP, træning, sponsor, projekt...)"
+        placeholder="Hvad skal der følges op på? (Skriv f.eks. eSOP, træning, sponsor, RUNI...)"
         oninput="handleLiveCategorize()"
         onkeydown="if(event.key==='Enter') addTask()"
       />
@@ -778,6 +974,8 @@
     <div id="content-area"></div>
   </main>
 
+  <div id="toast" class="toast"></div>
+
   <script>
     const DEFAULT_CATEGORIES = [
       {
@@ -785,7 +983,7 @@
         name: "C&A & Projektintegration",
         color: "#60a5fa",
         desc: "Fokusere på menneskesiden af projekter og sikre, at C&A-aktiviteter integreres i projektplanerne i tæt samarbejde med projektlederne.",
-        keywords: ["projekt", "projektplan", "projektleder", "projekttavle", "task force", "c&a", "change", "menneskesiden", "interessent", "rasci", "tidsplan", "milepæl", "ombyg", "runi"]
+        keywords: ["projekt", "projektplan", "projektleder", "projekttavle", "task force", "c&a", "change", "menneskesiden", "interessent", "rasci", "tidsplan", "milepæl", "ombyg", "runi", "wincc", "mmr", "cloud"]
       },
       {
         id: "comm",
@@ -825,24 +1023,24 @@
     ];
 
     const INITIAL_TASKS = [
-      { id: "t1", title: "Blækanlæg", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-20", priority: "", done: false },
-      { id: "t2", title: "Vægte til færdigvarer", categoryId: "ca", board: "Task Force", status: "Igangsat", date: "2026-11-19", priority: "Høj prioritet", done: false },
-      { id: "t3", title: "Hjælp til Driftskontrolant eSOP: Udtagningsfrekvens", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-16", priority: "", done: false },
-      { id: "t4", title: "Laves ny eSOP til Opfyldning af råvare", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-24", priority: "", done: false },
-      { id: "t5", title: "Overvågning og tømning af betontank", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-11-16", priority: "", done: false },
-      { id: "t6", title: "7 - Ovnbygning: Dæk 2+3 - 6S - Nødvendige eSOPs ikke opdateret", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-12-02", priority: "", done: false },
-      { id: "t7", title: "Foranstaltninger ved arbejde med og omkring hængende vægt", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-11-16", priority: "Medium prioritet", done: false },
-      { id: "t8", title: "Tilføjelse til eSOP Trådning af synål", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-14", priority: "", done: false },
-      { id: "t9", title: "eSOp ønskes på visuel kontrol", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-23", priority: "Medium prioritet", done: false },
-      { id: "t10", title: "Procedure for skift af hønsetråd", categoryId: "esop", board: "Kold-ende", status: "Igangsat", date: "2027-01-18", priority: "", done: false },
-      { id: "t11", title: "Ombyg hættestrækker - trådning af folie", categoryId: "ca", board: "Projekttavle", status: "Igangsat", date: "2026-11-16", priority: "", done: false },
-      { id: "t12", title: "trækstyrke (KUN OEM'er)", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-02", priority: "Medium prioritet", done: false },
-      { id: "t13", title: "Vedligeholdelse af delamineringen (Vokskar tøm og rens)", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-12-14", priority: "", done: false },
-      { id: "t14", title: "Opdatering af betjeningsvejledninger", categoryId: "esop", board: "Vedligehold", status: "Igangsat", date: "2026-11-16", priority: "Lav prioritet", done: false },
-      { id: "t15", title: "Fines brænder", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-14", priority: "Medium prioritet", done: false }
+      { id: "t1", title: "Blækanlæg", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-20", priority: "", note: "", done: false },
+      { id: "t2", title: "Vægte til færdigvarer", categoryId: "ca", board: "Task Force", status: "Igangsat", date: "2026-11-19", priority: "Høj prioritet", note: "", done: false },
+      { id: "t3", title: "Hjælp til Driftskontrolant eSOP: Udtagningsfrekvens", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-16", priority: "", note: "", done: false },
+      { id: "t4", title: "Laves ny eSOP til Opfyldning af råvare", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-24", priority: "", note: "", done: false },
+      { id: "t5", title: "Overvågning og tømning af betontank", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-11-16", priority: "", note: "", done: false },
+      { id: "t6", title: "7 - Ovnbygning: Dæk 2+3 - 6S - Nødvendige eSOPs ikke opdateret", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-12-02", priority: "", note: "", done: false },
+      { id: "t7", title: "Foranstaltninger ved arbejde med og omkring hængende vægt", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-11-16", priority: "Medium prioritet", note: "", done: false },
+      { id: "t8", title: "Tilføjelse til eSOP Trådning af synål", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-14", priority: "", note: "", done: false },
+      { id: "t9", title: "eSOp ønskes på visuel kontrol", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-23", priority: "Medium prioritet", note: "", done: false },
+      { id: "t10", title: "Procedure for skift af hønsetråd", categoryId: "esop", board: "Kold-ende", status: "Igangsat", date: "2027-01-18", priority: "", note: "", done: false },
+      { id: "t11", title: "Ombyg hættestrækker - trådning af folie", categoryId: "ca", board: "Projekttavle", status: "Igangsat", date: "2026-11-16", priority: "", note: "", done: false },
+      { id: "t12", title: "trækstyrke (KUN OEM'er)", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-02", priority: "Medium prioritet", note: "", done: false },
+      { id: "t13", title: "Vedligeholdelse af delamineringen (Vokskar tøm og rens)", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-12-14", priority: "", note: "", done: false },
+      { id: "t14", title: "Opdatering af betjeningsvejledninger", categoryId: "esop", board: "Vedligehold", status: "Igangsat", date: "2026-11-16", priority: "Lav prioritet", note: "", done: false },
+      { id: "t15", title: "Fines brænder", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-14", priority: "Medium prioritet", note: "", done: false }
     ];
 
-    const STORAGE_KEY = "cm_cockpit_v5";
+    const STORAGE_KEY = "cm_cockpit_v6";
     const FONT_KEY = "cm_cockpit_font_scale";
 
     let state = loadState();
@@ -850,7 +1048,19 @@
     let selectedCategoryId = "ca";
     let manualOverride = false;
     let searchQuery = "";
+    let boardFilter = "";
+    let statusFilter = "";
+    let sortBy = "date";
+    let openNotes = {};
     let fontScale = parseFloat(localStorage.getItem(FONT_KEY)) || 1.25;
+
+    function showToast(msg) {
+      const t = document.getElementById("toast");
+      t.textContent = msg;
+      t.classList.add("show");
+      clearTimeout(t._timer);
+      t._timer = setTimeout(() => t.classList.remove("show"), 2800);
+    }
 
     function applyFontScale() {
       document.documentElement.style.setProperty("--font-scale", fontScale.toFixed(2));
@@ -864,10 +1074,13 @@
 
     function loadState() {
       try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("cm_cockpit_v4");
+        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("cm_cockpit_v5") || localStorage.getItem("cm_cockpit_v4");
         if (raw) {
           const parsed = JSON.parse(raw);
-          if (parsed.categories && parsed.tasks) return parsed;
+          if (parsed.categories && parsed.tasks) {
+            parsed.tasks = parsed.tasks.map(t => ({ note: "", ...t }));
+            return parsed;
+          }
         }
       } catch (e) {}
       return { categories: DEFAULT_CATEGORIES, tasks: INITIAL_TASKS };
@@ -875,6 +1088,25 @@
 
     function saveState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function getDueInfo(dateStr) {
+      if (!dateStr) return null;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const target = new Date(dateStr + "T00:00:00");
+      if (isNaN(target.getTime())) return null;
+      const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
+      if (diffDays < 0) return { type: "overdue", label: `Overskredet (${Math.abs(diffDays)}d)` };
+      if (diffDays === 0) return { type: "soon", label: "I dag" };
+      if (diffDays <= 7) return { type: "soon", label: `Om ${diffDays}d` };
+      return null;
+    }
+
+    function isUrgentTask(task) {
+      if (task.done || !task.date) return false;
+      const info = getDueInfo(task.date);
+      return info !== null;
     }
 
     function detectCategory(text) {
@@ -895,6 +1127,21 @@
         }
       }
       return bestId;
+    }
+
+    function reCategorizeAllActive() {
+      let moved = 0;
+      for (const task of state.tasks) {
+        if (task.done) continue;
+        const matched = detectCategory(`${task.title} ${task.board || ""}`);
+        if (matched && matched !== task.categoryId) {
+          task.categoryId = matched;
+          moved++;
+        }
+      }
+      saveState();
+      render();
+      showToast(moved > 0 ? `${moved} opgaver blev flyttet ud fra dine nøgleord.` : "Alle aktive opgaver matcher allerede reglerne.");
     }
 
     function handleLiveCategorize() {
@@ -954,6 +1201,7 @@
         status: "Igangsat",
         date,
         priority,
+        note: "",
         done: false
       });
 
@@ -965,6 +1213,7 @@
       handleLiveCategorize();
       saveState();
       render();
+      showToast("Opgave tilføjet");
     }
 
     function toggleDone(id) {
@@ -981,8 +1230,27 @@
       if (task) {
         task[field] = value;
         saveState();
-        render();
+        if (field !== "note") render();
       }
+    }
+
+    function postponeOneWeek(id) {
+      const task = state.tasks.find(t => t.id === id);
+      if (!task) return;
+      const base = task.date ? new Date(task.date + "T00:00:00") : new Date();
+      base.setDate(base.getDate() + 7);
+      const yyyy = base.getFullYear();
+      const mm = String(base.getMonth() + 1).padStart(2, "0");
+      const dd = String(base.getDate()).padStart(2, "0");
+      task.date = `${yyyy}-${mm}-${dd}`;
+      saveState();
+      render();
+      showToast(`Ny dato: ${dd}-${mm}-${yyyy}`);
+    }
+
+    function toggleNoteBox(id) {
+      openNotes[id] = !openNotes[id];
+      render();
     }
 
     function updateTaskTitle(id, newTitle) {
@@ -1024,6 +1292,8 @@
     function setView(viewId) {
       currentView = viewId;
       searchQuery = "";
+      boardFilter = "";
+      statusFilter = "";
       if (state.categories.some(c => c.id === viewId) && !manualOverride) {
         selectedCategoryId = viewId;
         updatePillUI("Standard for visning");
@@ -1036,11 +1306,63 @@
       return (str || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     }
 
+    function formatDateDK(iso) {
+      if (!iso) return "";
+      const p = iso.split("-");
+      return p.length === 3 ? `${p[2]}-${p[1]}-${p[0]}` : iso;
+    }
+
+    function copyStatusReport() {
+      const active = state.tasks.filter(t => !t.done);
+      const todayStr = new Date().toLocaleDateString("da-DK");
+      let lines = [`CHANGE MASTER STATUSOVERSIGT (${todayStr})`, `Aktive opgaver i alt: ${active.length}`, ""];
+
+      for (const cat of state.categories) {
+        const items = active.filter(t => t.categoryId === cat.id);
+        if (items.length === 0) continue;
+        lines.push(`■ ${cat.name.toUpperCase()} (${items.length})`);
+        for (const t of items) {
+          const meta = [
+            t.board ? `Tavle: ${t.board}` : "",
+            t.status || "",
+            t.date ? `Dato: ${formatDateDK(t.date)}` : "",
+            t.priority || ""
+          ].filter(Boolean).join(" | ");
+          lines.push(`  - ${t.title}${meta ? ` [${meta}]` : ""}`);
+          if (t.note && t.note.trim()) {
+            lines.push(`    Note: ${t.note.trim()}`);
+          }
+        }
+        lines.push("");
+      }
+
+      const text = lines.join("\n");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(() => {
+          showToast("Statusrapport kopieret til udklipsholder — klar til Outlook/Teams!");
+        }).catch(() => fallbackCopy(text));
+      } else {
+        fallbackCopy(text);
+      }
+    }
+
+    function fallbackCopy(text) {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      showToast("Statusrapport kopieret til udklipsholder!");
+    }
+
     function render() {
       const activeTasks = state.tasks.filter(t => !t.done);
+      const urgentTasks = activeTasks.filter(isUrgentTask);
       const doneTasks = state.tasks.filter(t => t.done);
 
       document.getElementById("count-all").textContent = activeTasks.length;
+      document.getElementById("count-urgent").textContent = urgentTasks.length;
       document.getElementById("count-done").textContent = doneTasks.length;
 
       const navContainer = document.getElementById("category-nav");
@@ -1071,6 +1393,7 @@
               <h2 class="view-title">Nøgleord &amp; Auto-sortering</h2>
               <p class="view-subtitle">Tilføj interne projektnavne, tavler eller fagudtryk — appen sorterer automatisk efter disse ord.</p>
             </div>
+            <button class="report-btn" onclick="reCategorizeAllActive()">↻ Gen-sorter alle aktive opgaver nu</button>
           </div>
           ${state.categories.map(cat => `
             <div class="kw-card">
@@ -1081,7 +1404,7 @@
               <p class="kw-desc">${cat.desc}</p>
               <div class="kw-tags">
                 ${cat.keywords.map(kw => `
-                  <span class="kw-chip">${kw} <button onclick="removeKeyword('${cat.id}', '${kw.replace(/'/g, "\\'")}')">&times;</button></span>
+                  <span class="kw-chip">${escapeHtml(kw)} <button onclick="removeKeyword('${cat.id}', '${kw.replace(/'/g, "\\'")}')">&times;</button></span>
                 `).join("")}
               </div>
               <div class="kw-add-row">
@@ -1094,31 +1417,54 @@
         return;
       }
 
-      let filtered = [];
+      let baseList = [];
       let title = "";
       let subtitle = "";
 
       if (currentView === "all") {
-        filtered = activeTasks;
+        baseList = activeTasks;
         title = "Alle aktive opgaver";
         subtitle = `${activeTasks.length} aktive opgaver fordelt på dine 6 ansvarsområder`;
+      } else if (currentView === "urgent") {
+        baseList = urgentTasks;
+        title = "Forfaldne & Næste 7 dage";
+        subtitle = `${urgentTasks.length} opgaver der kræver opmærksomhed nu`;
       } else if (currentView === "done") {
-        filtered = doneTasks;
+        baseList = doneTasks;
         title = "Afsluttede opgaver";
         subtitle = `${doneTasks.length} gennemførte opgaver`;
       } else {
         const cat = state.categories.find(c => c.id === currentView);
-        filtered = activeTasks.filter(t => t.categoryId === currentView);
+        baseList = activeTasks.filter(t => t.categoryId === currentView);
         title = cat ? cat.name : "";
         subtitle = cat ? cat.desc : "";
       }
 
+      // Unikke tavler i den aktuelle visning til hurtigfilter
+      const boards = [...new Set(baseList.map(t => (t.board || "").trim()).filter(Boolean))];
+
+      let filtered = [...baseList];
+      if (boardFilter) {
+        filtered = filtered.filter(t => (t.board || "").trim() === boardFilter);
+      }
+      if (statusFilter) {
+        filtered = filtered.filter(t => t.status === statusFilter);
+      }
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase();
         filtered = filtered.filter(t =>
           t.title.toLowerCase().includes(q) ||
-          (t.board && t.board.toLowerCase().includes(q))
+          (t.board && t.board.toLowerCase().includes(q)) ||
+          (t.note && t.note.toLowerCase().includes(q))
         );
+      }
+
+      // Sortering
+      if (sortBy === "date") {
+        filtered.sort((a, b) => (a.date || "9999-12-31").localeCompare(b.date || "9999-12-31"));
+      } else if (sortBy === "priority") {
+        const rank = { "Høj prioritet": 1, "Medium prioritet": 2, "Lav prioritet": 3, "": 4 };
+        filtered.sort((a, b) => (rank[a.priority || ""] || 4) - (rank[b.priority || ""] || 4));
       }
 
       content.innerHTML = `
@@ -1127,19 +1473,48 @@
             <h2 class="view-title">${title}</h2>
             <p class="view-subtitle">${subtitle}</p>
           </div>
-          <input type="text" class="search-bar" placeholder="Søg i opgaver..." value="${escapeHtml(searchQuery)}" oninput="searchQuery = this.value; render();" />
+          <div class="header-actions">
+            <button class="report-btn" onclick="copyStatusReport()" title="Kopiér pæn statusoversigt til Outlook eller Teams">📋 Kopiér status</button>
+            <input type="text" class="search-bar" placeholder="Søg i opgaver & noter..." value="${escapeHtml(searchQuery)}" oninput="searchQuery = this.value; render();" />
+          </div>
         </div>
+
+        <div class="filter-strip">
+          <div class="filter-chips">
+            <button class="filter-chip ${!boardFilter && !statusFilter ? "active" : ""}" onclick="boardFilter=''; statusFilter=''; render();">Alle (${baseList.length})</button>
+            <button class="filter-chip ${statusFilter === 'Venter' ? "active" : ""}" onclick="statusFilter = statusFilter === 'Venter' ? '' : 'Venter'; render();">Venter</button>
+            <button class="filter-chip ${statusFilter === 'Igangsat' ? "active" : ""}" onclick="statusFilter = statusFilter === 'Igangsat' ? '' : 'Igangsat'; render();">Igangsat</button>
+            ${boards.map(b => `
+              <button class="filter-chip ${boardFilter === b ? "active" : ""}" onclick="boardFilter = boardFilter === '${b.replace(/'/g, "\\'")}' ? '' : '${b.replace(/'/g, "\\'")}'; render();">${escapeHtml(b)}</button>
+            `).join("")}
+          </div>
+
+          <select class="mini-select" onchange="sortBy = this.value; render();" title="Sortering">
+            <option value="date" ${sortBy === "date" ? "selected" : ""}>Sortér: Nærmeste dato</option>
+            <option value="priority" ${sortBy === "priority" ? "selected" : ""}>Sortér: Prioritet</option>
+            <option value="manual" ${sortBy === "manual" ? "selected" : ""}>Sortér: Senest oprettet</option>
+          </select>
+        </div>
+
         <div class="task-list">
-          ${filtered.length === 0 ? `<div class="empty-state">Ingen opgaver i denne visning.</div>` : filtered.map(task => {
+          ${filtered.length === 0 ? `<div class="empty-state">Ingen opgaver matcher det valgte filter.</div>` : filtered.map(task => {
             const cat = state.categories.find(c => c.id === task.categoryId) || state.categories[0];
             const statusClass = task.status === "Venter" ? "status-venter" : "";
             const prioClass = task.priority && task.priority.includes("Høj") ? "prio-høj" : (task.priority && task.priority.includes("Medium") ? "prio-medium" : "");
+            const due = !task.done ? getDueInfo(task.date) : null;
+            const hasNote = task.note && task.note.trim().length > 0;
+            const noteOpen = !!openNotes[task.id] || hasNote;
+
             return `
               <div class="task-row ${task.done ? "done" : ""}">
                 <div class="task-left">
                   <button class="check-circle" onclick="toggleDone('${task.id}')" title="Markér som udført">✓</button>
                   <div class="task-content">
-                    <div class="task-title" contenteditable="true" onblur="updateTaskTitle('${task.id}', this.textContent)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>
+                    <div class="task-title-line">
+                      <div class="task-title" contenteditable="true" onblur="updateTaskTitle('${task.id}', this.textContent)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>
+                      ${due ? `<span class="due-badge ${due.type === 'overdue' ? 'due-overdue' : 'due-soon'}">${due.label}</span>` : ""}
+                    </div>
+
                     <div class="task-meta">
                       <label class="inline-meta-field" title="Ret tavlenavn">
                         <span class="inline-meta-label">Tavle:</span>
@@ -1153,10 +1528,11 @@
                         </select>
                       </label>
 
-                      <label class="inline-meta-field" title="Vælg ny dato">
+                      <span class="inline-meta-field" title="Vælg ny dato eller udsæt +1 uge">
                         <span class="inline-meta-label">Dato:</span>
                         <input type="date" class="inline-date-input" value="${task.date || ""}" onchange="updateTaskField('${task.id}', 'date', this.value)" />
-                      </label>
+                        <button type="button" class="plus-week-btn" onclick="postponeOneWeek('${task.id}')" title="Udsæt frist 7 dage">+7d</button>
+                      </span>
 
                       <label class="inline-meta-field ${prioClass}" title="Skift prioritet">
                         <select class="inline-select" onchange="updateTaskField('${task.id}', 'priority', this.value)">
@@ -1166,7 +1542,15 @@
                           <option value="Lav prioritet" ${task.priority === "Lav prioritet" ? "selected" : ""}>Lav prioritet</option>
                         </select>
                       </label>
+
+                      <button type="button" class="note-toggle-btn ${hasNote ? "has-note" : ""}" onclick="toggleNoteBox('${task.id}')">
+                        ${hasNote ? "📝 Note" : "+ Note"}
+                      </button>
                     </div>
+
+                    ${noteOpen ? `
+                      <textarea class="task-note-box" placeholder="Skriv næste skridt, aftale eller afklaring her..." oninput="updateTaskField('${task.id}', 'note', this.value)">${escapeHtml(task.note)}</textarea>
+                    ` : ""}
                   </div>
                 </div>
                 <div class="task-right">
@@ -1203,7 +1587,7 @@
             state = imported;
             saveState();
             render();
-            alert("Backup indlæst!");
+            showToast("Backup indlæst!");
           }
         } catch (err) {
           alert("Kunne ikke læse JSON-filen.");
