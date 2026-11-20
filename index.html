@@ -1,1617 +1,1237 @@
 <!DOCTYPE html>
 <html lang="da">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Change Master Cockpit — Fokus & Opgaver</title>
-  <style>
-    :root {
-      --font-scale: 1.25;
-      --bg-sidebar: #161719;
-      --bg-main: #1d1e21;
-      --bg-elevated: #26272b;
-      --bg-hover: #2d2f34;
-      --border: #2f3136;
-      --border-strong: #464950;
-      --text-primary: #f5f4f0;
-      --text-secondary: #c4c1ba;
-      --text-muted: #93908a;
-      --accent: #d97757;
-      --accent-soft: rgba(217, 119, 87, 0.14);
-
-      --c-ca: #60a5fa;
-      --c-comm: #c084fc;
-      --c-user: #34d399;
-      --c-spon: #fbbf24;
-      --c-anch: #f472b6;
-      --c-esop: #fb923c;
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      font-size: calc(16px * var(--font-scale));
-    }
-
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
-      background-color: var(--bg-main);
-      color: var(--text-primary);
-      display: flex;
-      min-height: 100vh;
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    /* VENSTRE NAVIGATION */
-    .sidebar {
-      width: 345px;
-      background-color: var(--bg-sidebar);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 22px 16px;
-      flex-shrink: 0;
-      position: sticky;
-      top: 0;
-      height: 100vh;
-      overflow-y: auto;
-    }
-
-    .brand {
-      padding: 0 10px 16px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 14px;
-    }
-
-    .brand-eyebrow {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 3px;
-    }
-
-    .brand h1 {
-      font-size: 1.2rem;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-      color: var(--text-primary);
-    }
-
-    .nav-section-label {
-      font-size: 0.72rem;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      padding: 14px 10px 6px;
-      font-weight: 700;
-    }
-
-    .nav-btn {
-      width: 100%;
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 12px;
-      border-radius: 10px;
-      cursor: pointer;
-      font-size: 0.88rem;
-      text-align: left;
-      transition: background 0.15s, color 0.15s;
-      gap: 10px;
-    }
-
-    .nav-btn:hover {
-      background-color: var(--bg-hover);
-      color: var(--text-primary);
-    }
-
-    .nav-btn.active {
-      background-color: var(--bg-elevated);
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    .nav-left {
-      display: flex;
-      align-items: center;
-      gap: 11px;
-      min-width: 0;
-    }
-
-    .nav-left span.label {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .dot {
-      width: 11px;
-      height: 11px;
-      border-radius: 50%;
-      flex-shrink: 0;
-    }
-
-    .count-badge {
-      font-size: 0.78rem;
-      color: var(--text-secondary);
-      background: rgba(255, 255, 255, 0.06);
-      padding: 2px 9px;
-      border-radius: 999px;
-      flex-shrink: 0;
-      font-weight: 600;
-    }
-
-    .count-badge.warn {
-      background: rgba(248, 113, 113, 0.18);
-      color: #fca5a5;
-    }
-
-    .nav-btn.active .count-badge {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .sidebar-footer {
-      border-top: 1px solid var(--border);
-      padding-top: 12px;
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-
-    /* SKRIFTSTØRRELSE KONTROL */
-    .font-controls {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 7px 12px;
-      margin-bottom: 6px;
-      background: var(--bg-elevated);
-      border-radius: 9px;
-      font-size: 0.8rem;
-      color: var(--text-secondary);
-    }
-
-    .font-btns {
-      display: flex;
-      gap: 6px;
-    }
-
-    .font-step-btn {
-      background: var(--bg-main);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      padding: 3px 10px;
-      border-radius: 6px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    .font-step-btn:hover {
-      border-color: var(--accent);
-    }
-
-    /* HOVEDOMRÅDE */
-    .main {
-      flex: 1;
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 30px 38px 80px;
-      width: 100%;
-    }
-
-    .mobile-header {
-      display: none;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .menu-toggle {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      padding: 9px 14px;
-      border-radius: 9px;
-      font-size: 0.9rem;
-      font-weight: 600;
-      cursor: pointer;
-    }
-
-    /* SPOTLIGHT OPRETTELSE */
-    .spotlight-box {
-      background-color: var(--bg-elevated);
-      border: 1px solid var(--border-strong);
-      border-radius: 14px;
-      padding: 18px 22px;
-      margin-bottom: 26px;
-      transition: border-color 0.2s;
-    }
-
-    .spotlight-box:focus-within {
-      border-color: var(--accent);
-    }
-
-    .spotlight-input {
-      width: 100%;
-      background: transparent;
-      border: none;
-      outline: none;
-      color: var(--text-primary);
-      font-size: 1.12rem;
-      font-weight: 500;
-      margin-bottom: 12px;
-    }
-
-    .spotlight-input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .spotlight-controls {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding-top: 12px;
-      border-top: 1px solid var(--border);
-    }
-
-    .controls-left {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 9px;
-    }
-
-    .cat-pill-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--bg-main);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      padding: 7px 14px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 0.15s;
-    }
-
-    .cat-pill-btn:hover {
-      background: var(--bg-hover);
-    }
-
-    .auto-hint {
-      font-size: 0.78rem;
-      color: var(--text-muted);
-    }
-
-    .mini-input, .mini-select {
-      background: var(--bg-main);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      border-radius: 8px;
-      padding: 7px 11px;
-      font-size: 0.84rem;
-      outline: none;
-      color-scheme: dark;
-    }
-
-    .mini-input:focus, .mini-select:focus {
-      border-color: var(--accent);
-    }
-
-    .add-btn {
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      padding: 8px 18px;
-      border-radius: 9px;
-      font-size: 0.88rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: opacity 0.15s;
-    }
-
-    .add-btn:hover {
-      opacity: 0.9;
-    }
-
-    /* VIEW HEADER & FILTER-BJÆLKE */
-    .view-header {
-      display: flex;
-      align-items: flex-end;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .view-title {
-      font-size: 1.42rem;
-      font-weight: 700;
-      letter-spacing: -0.015em;
-    }
-
-    .view-subtitle {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      margin-top: 2px;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .report-btn {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      padding: 8px 14px;
-      border-radius: 9px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      transition: border-color 0.15s, background 0.15s;
-    }
-
-    .report-btn:hover {
-      border-color: var(--accent);
-      background: var(--bg-hover);
-    }
-
-    .search-bar {
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      padding: 8px 14px;
-      border-radius: 9px;
-      font-size: 0.88rem;
-      width: 230px;
-      outline: none;
-    }
-
-    .search-bar:focus {
-      border-color: var(--accent);
-    }
-
-    .filter-strip {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      padding: 10px 14px;
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border);
-      border-radius: 11px;
-      margin-bottom: 16px;
-    }
-
-    .filter-chips {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 7px;
-    }
-
-    .filter-chip {
-      background: transparent;
-      border: 1px solid var(--border-strong);
-      color: var(--text-secondary);
-      padding: 4px 11px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      cursor: pointer;
-      transition: all 0.15s;
-    }
-
-    .filter-chip:hover {
-      color: var(--text-primary);
-      border-color: var(--text-secondary);
-    }
-
-    .filter-chip.active {
-      background: var(--accent-soft);
-      border-color: var(--accent);
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    /* OPGAVELISTE */
-    .task-list {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .task-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding: 16px 12px;
-      border-bottom: 1px solid var(--border);
-      gap: 16px;
-      transition: background 0.12s;
-      border-radius: 10px;
-    }
-
-    .task-row:hover {
-      background-color: rgba(255, 255, 255, 0.025);
-    }
-
-    .task-left {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      flex: 1;
-      min-width: 0;
-    }
-
-    .check-circle {
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      border: 2px solid var(--border-strong);
-      background: transparent;
-      cursor: pointer;
-      flex-shrink: 0;
-      margin-top: 3px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: transparent;
-      font-size: 0.85rem;
-      font-weight: 700;
-      transition: all 0.15s;
-    }
-
-    .check-circle:hover {
-      border-color: var(--accent);
-    }
-
-    .task-row.done .check-circle {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .task-content {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .task-title-line {
-      display: flex;
-      align-items: baseline;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .task-title {
-      font-size: 1.04rem;
-      font-weight: 500;
-      color: var(--text-primary);
-      word-break: break-word;
-      cursor: text;
-      outline: none;
-      border-radius: 5px;
-      padding: 2px 5px;
-      margin-left: -5px;
-    }
-
-    .task-title:hover {
-      background: rgba(255, 255, 255, 0.04);
-    }
-
-    .task-title:focus {
-      background: var(--bg-elevated);
-      box-shadow: 0 0 0 1px var(--accent);
-    }
-
-    .task-row.done .task-title {
-      text-decoration: line-through;
-      color: var(--text-muted);
-    }
-
-    .due-badge {
-      font-size: 0.74rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 6px;
-      letter-spacing: 0.02em;
-    }
-
-    .due-overdue {
-      background: rgba(248, 113, 113, 0.18);
-      color: #fca5a5;
-      border: 1px solid rgba(248, 113, 113, 0.35);
-    }
-
-    .due-soon {
-      background: rgba(251, 191, 36, 0.16);
-      color: #fde047;
-      border: 1px solid rgba(251, 191, 36, 0.35);
-    }
-
-    /* DIREKTE REDIGERBAR METADATA-LINJE */
-    .task-meta {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      gap: 8px;
-      margin-top: 9px;
-      font-size: 0.81rem;
-    }
-
-    .inline-meta-field {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      padding: 3px 9px;
-      border-radius: 7px;
-      color: var(--text-secondary);
-      transition: border-color 0.15s;
-    }
-
-    .inline-meta-field:hover, .inline-meta-field:focus-within {
-      border-color: var(--border-strong);
-    }
-
-    .inline-meta-label {
-      color: var(--text-muted);
-      font-size: 0.75rem;
-    }
-
-    .inline-board-input {
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-size: 0.81rem;
-      width: 105px;
-      outline: none;
-      font-family: inherit;
-    }
-
-    .inline-date-input {
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-size: 0.81rem;
-      outline: none;
-      font-family: inherit;
-      cursor: pointer;
-      color-scheme: dark;
-    }
-
-    .plus-week-btn {
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid var(--border-strong);
-      color: var(--text-secondary);
-      font-size: 0.74rem;
-      font-weight: 600;
-      padding: 1px 6px;
-      border-radius: 5px;
-      cursor: pointer;
-      margin-left: 2px;
-    }
-
-    .plus-week-btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: #fff;
-    }
-
-    .inline-select {
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-size: 0.81rem;
-      outline: none;
-      font-family: inherit;
-      cursor: pointer;
-    }
-
-    .inline-select option {
-      background: var(--bg-sidebar);
-      color: var(--text-primary);
-    }
-
-    .inline-meta-field.status-venter {
-      border-color: rgba(251, 191, 36, 0.35);
-      background: rgba(251, 191, 36, 0.1);
-    }
-    .inline-meta-field.status-venter .inline-select {
-      color: #fbbf24;
-      font-weight: 600;
-    }
-
-    .inline-meta-field.prio-høj {
-      border-color: rgba(248, 113, 113, 0.4);
-      background: rgba(248, 113, 113, 0.12);
-    }
-    .inline-meta-field.prio-høj .inline-select {
-      color: #f87171;
-      font-weight: 600;
-    }
-
-    .inline-meta-field.prio-medium {
-      border-color: rgba(96, 165, 250, 0.35);
-      background: rgba(96, 165, 250, 0.1);
-    }
-    .inline-meta-field.prio-medium .inline-select {
-      color: #60a5fa;
-      font-weight: 600;
-    }
-
-    .note-toggle-btn {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      padding: 3px 9px;
-      border-radius: 7px;
-      font-size: 0.78rem;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .note-toggle-btn:hover {
-      border-color: var(--border-strong);
-      color: var(--text-primary);
-    }
-
-    .note-toggle-btn.has-note {
-      border-color: rgba(52, 211, 153, 0.4);
-      color: #6ee7b7;
-      background: rgba(52, 211, 153, 0.08);
-    }
-
-    .task-note-box {
-      margin-top: 10px;
-      width: 100%;
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border-strong);
-      border-radius: 8px;
-      padding: 8px 11px;
-      color: var(--text-primary);
-      font-family: inherit;
-      font-size: 0.85rem;
-      resize: vertical;
-      min-height: 58px;
-      outline: none;
-    }
-
-    .task-note-box:focus {
-      border-color: var(--accent);
-    }
-
-    .task-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-shrink: 0;
-    }
-
-    .row-cat-select {
-      background: var(--bg-sidebar);
-      border: 1px solid var(--border-strong);
-      color: var(--text-primary);
-      font-size: 0.81rem;
-      padding: 6px 10px;
-      border-radius: 999px;
-      cursor: pointer;
-      outline: none;
-      max-width: 235px;
-    }
-
-    .row-cat-select:hover {
-      border-color: var(--accent);
-    }
-
-    .delete-btn {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1rem;
-      padding: 4px 8px;
-      border-radius: 6px;
-      opacity: 0.65;
-      transition: opacity 0.15s, color 0.15s;
-    }
-
-    .task-row:hover .delete-btn {
-      opacity: 1;
-    }
-
-    .delete-btn:hover {
-      color: #f87171;
-    }
-
-    .empty-state {
-      text-align: center;
-      padding: 48px 20px;
-      color: var(--text-muted);
-      font-size: 1rem;
-    }
-
-    /* NØGLEORDS-VIEW */
-    .kw-card {
-      background: var(--bg-elevated);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 18px 20px;
-      margin-bottom: 16px;
-    }
-
-    .kw-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-weight: 700;
-      font-size: 1.05rem;
-      margin-bottom: 5px;
-    }
-
-    .kw-desc {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      margin-bottom: 14px;
-    }
-
-    .kw-tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-bottom: 12px;
-    }
-
-    .kw-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      background: var(--bg-main);
-      border: 1px solid var(--border-strong);
-      padding: 4px 11px;
-      border-radius: 999px;
-      font-size: 0.84rem;
-      color: var(--text-primary);
-    }
-
-    .kw-chip button {
-      background: none;
-      border: none;
-      color: var(--text-muted);
-      cursor: pointer;
-      font-size: 1rem;
-      line-height: 1;
-    }
-
-    .kw-chip button:hover {
-      color: #f87171;
-    }
-
-    .kw-add-row {
-      display: flex;
-      gap: 10px;
-    }
-
-    /* TOAST BEKRÆFTELSE */
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      background: var(--bg-elevated);
-      border: 1px solid var(--accent);
-      color: var(--text-primary);
-      padding: 12px 18px;
-      border-radius: 10px;
-      font-size: 0.88rem;
-      font-weight: 500;
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
-      z-index: 100;
-      opacity: 0;
-      transform: translateY(10px);
-      pointer-events: none;
-      transition: opacity 0.2s, transform 0.2s;
-    }
-
-    .toast.show {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (max-width: 920px) {
-      .sidebar {
-        position: fixed;
-        left: -355px;
-        z-index: 50;
-        transition: left 0.22s ease;
-      }
-      .sidebar.open {
-        left: 0;
-        box-shadow: 12px 0 32px rgba(0, 0, 0, 0.5);
-      }
-      .mobile-header {
-        display: flex;
-      }
-      .main {
-        padding: 20px 18px 60px;
-      }
-      .task-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .task-right {
-        justify-content: flex-end;
-        padding-left: 38px;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Change Master Cockpit · LommeLog Edition</title>
+    <style>
+        :root {
+            --bg-app: #090a0f;
+            --bg-panel: #12141d;
+            --bg-card: #181b26;
+            --bg-input: #1e2230;
+            --bg-hover: #24293a;
+            --border: #272c3d;
+            --border-active: #3a425c;
+
+            --accent: #10b981;
+            --accent-dim: rgba(16, 185, 129, 0.16);
+            --crimson: #ff0055;
+            --crimson-dim: rgba(255, 0, 85, 0.16);
+            --amber: #f59e0b;
+            --cyan: #06b6d4;
+
+            --text-main: #f3f4f6;
+            --text-sec: #9ca3af;
+            --text-muted: #6b7280;
+
+            --font-scale: 15px;
+            --radius: 12px;
+            --radius-sm: 8px;
+        }
+
+        [data-accent="crimson"] {
+            --accent: #ff0055;
+            --accent-dim: rgba(255, 0, 85, 0.16);
+        }
+        [data-accent="cyan"] {
+            --accent: #06b6d4;
+            --accent-dim: rgba(6, 182, 212, 0.16);
+        }
+
+        * { box-sizing: border-box; }
+        html { font-size: var(--font-scale); }
+        body {
+            margin: 0;
+            background: var(--bg-app);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            line-height: 1.45;
+            padding: 16px;
+        }
+
+        .icon { width: 1rem; height: 1rem; fill: currentColor; display: inline-block; vertical-align: -0.15em; flex-shrink: 0; }
+        .spin { animation: spin 2s linear infinite; }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+
+        .app-container {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* LOMMELOG TOP BAR */
+        .top-header {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .brand-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .brand-badge {
+            width: 34px;
+            height: 34px;
+            border-radius: 10px;
+            background: var(--accent-dim);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 0.95rem;
+        }
+        .brand-title {
+            font-size: 1.05rem;
+            font-weight: 800;
+            letter-spacing: 0.2px;
+        }
+        .brand-sub {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+
+        /* PILL TABS (LOMMELOG STYLE) */
+        .pill-nav {
+            display: flex;
+            background: var(--bg-app);
+            padding: 4px;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            gap: 4px;
+        }
+        .pill-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-sec);
+            padding: 7px 14px;
+            border-radius: 7px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s;
+        }
+        .pill-btn:hover { color: var(--text-main); }
+        .pill-btn.active {
+            background: var(--bg-card);
+            color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .header-tools {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .tool-chip {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-sec);
+            padding: 6px 10px;
+            border-radius: var(--radius-sm);
+            font-size: 0.78rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .tool-chip:hover { border-color: var(--accent); color: var(--text-main); }
+        .tool-chip.active { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+        .timer-pill {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-app);
+            border: 1px solid var(--border);
+            padding: 5px 11px;
+            border-radius: var(--radius-sm);
+        }
+        .timer-pill.running { border-color: var(--crimson); }
+        .timer-readout {
+            font-weight: 800;
+            font-variant-numeric: tabular-nums;
+            font-size: 0.92rem;
+            color: var(--accent);
+        }
+        .timer-pill.running .timer-readout { color: var(--crimson); }
+
+        /* KPI ROW */
+        .kpi-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        .kpi-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 12px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: border-color 0.15s;
+        }
+        .kpi-box:hover { border-color: var(--accent); }
+        .kpi-lbl { font-size: 0.76rem; color: var(--text-sec); font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; }
+        .kpi-val { font-size: 1.45rem; font-weight: 800; }
+
+        /* 2-COLUMN COCKPIT SPLIT (LOMMELOG SIGNATURE) */
+        .cockpit-split {
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            gap: 16px;
+            align-items: start;
+        }
+
+        .panel-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .section-head {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.76rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: var(--text-sec);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        /* QUICK INPUT BOX */
+        .quick-box {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: var(--radius-sm);
+        }
+        .quick-box input {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 9px 11px;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            outline: none;
+        }
+        .quick-box input:focus { border-color: var(--accent); }
+        .quick-row {
+            display: flex;
+            gap: 6px;
+        }
+        .quick-row select {
+            flex: 1;
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-sec);
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 0.76rem;
+            font-weight: 600;
+            outline: none;
+        }
+        .btn-accent {
+            background: var(--accent);
+            color: #050807;
+            border: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.8rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        .btn-accent:hover { filter: brightness(1.1); }
+
+        /* 6 CHANGE MASTER AREAS */
+        .area-pills {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+        .area-pill {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            color: var(--text-sec);
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.74rem;
+            font-weight: 700;
+            cursor: pointer;
+        }
+        .area-pill:hover, .area-pill.active {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: var(--accent-dim);
+        }
+
+        /* WEEK COLUMNS */
+        .week-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+        .day-column {
+            background: var(--bg-app);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 12px;
+            min-height: 360px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .day-column.drag-over {
+            border-color: var(--accent);
+            background: var(--accent-dim);
+        }
+        .day-col-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.78rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--accent);
+            padding-bottom: 6px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* LOMMELOG TASK CARD */
+        .ll-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--accent);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+            cursor: grab;
+            transition: transform 0.12s, border-color 0.15s;
+        }
+        .ll-card:hover {
+            border-color: var(--border-active);
+            transform: translateY(-1px);
+        }
+        .ll-card.prio-Høj { border-left-color: var(--crimson); }
+        .ll-card.prio-Mellem { border-left-color: var(--amber); }
+        .ll-card.prio-Lav { border-left-color: var(--accent); }
+        .ll-card.done { opacity: 0.45; }
+
+        .ll-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 6px;
+        }
+        .ll-card-title {
+            font-size: 0.86rem;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.35;
+        }
+        .ll-card-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.72rem;
+            color: var(--text-muted);
+        }
+        .area-tag {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-sec);
+            padding: 2px 7px;
+            border-radius: 5px;
+            font-size: 0.68rem;
+            font-weight: 700;
+        }
+
+        .progress-mini {
+            width: 100%;
+            height: 4px;
+            background: var(--bg-app);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+        .progress-mini-fill {
+            height: 100%;
+            background: var(--accent);
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 3px;
+            display: inline-flex;
+            align-items: center;
+        }
+        .icon-btn:hover { color: var(--text-main); }
+        .icon-btn.star-on { color: var(--amber); }
+        .icon-btn.timer-on { color: var(--crimson); }
+        .icon-btn.del:hover { color: var(--crimson); }
+
+        /* TABLE VIEW */
+        .table-container {
+            overflow-x: auto;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.84rem;
+        }
+        th {
+            background: var(--bg-card);
+            color: var(--text-muted);
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            text-align: left;
+            padding: 11px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid var(--border);
+        }
+        tr:hover td { background: var(--bg-hover); }
+        tr.done td { opacity: 0.48; }
+
+        .inline-ctrl {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            border-radius: 5px;
+            padding: 4px 7px;
+            font-size: 0.78rem;
+            font-family: inherit;
+        }
+
+        /* MODAL */
+        .modal-bg {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            justify-content: center;
+            align-items: center;
+            padding: 16px;
+        }
+        .modal-bg.open { display: flex; }
+        .modal-box {
+            background: var(--bg-panel);
+            border: 1px solid var(--border-active);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 600px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .modal-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        .m-field { display: flex; flex-direction: column; gap: 4px; }
+        .m-field label { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--text-muted); }
+        .m-field input, .m-field select, .m-field textarea {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            padding: 8px 10px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: inherit;
+        }
+        .m-field textarea { min-height: 90px; resize: vertical; }
+
+        .sub-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            padding: 6px 10px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+            margin-bottom: 6px;
+        }
+        .sub-row input[type="text"] {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            outline: none;
+        }
+
+        .page-view { display: none; flex-direction: column; gap: 16px; }
+        .page-view.active { display: flex; }
+
+        @media (max-width: 1150px) {
+            .cockpit-split { grid-template-columns: 1fr; }
+            .week-3col { grid-template-columns: 1fr; }
+            .kpi-strip { grid-template-columns: repeat(2, 1fr); }
+        }
+    </style>
 </head>
-<body>
+<body data-accent="emerald">
 
-  <!-- VENSTRE SIDEBAR -->
-  <aside class="sidebar" id="sidebar">
-    <div>
-      <div class="brand">
-        <div class="brand-eyebrow">Change Master Cockpit</div>
-        <h1>Ansvarsområder</h1>
-      </div>
+<!-- OFFLINE SVG ICONS -->
+<svg style="display:none;" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></symbol>
+    <symbol id="i-trash" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></symbol>
+    <symbol id="i-note" viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
+    <symbol id="i-down" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></symbol>
+    <symbol id="i-up" viewBox="0 0 24 24"><path d="M9 16h6v-6h4l-7-7-7 7h4zm-4 2h14v2H5z"/></symbol>
+</svg>
 
-      <button class="nav-btn active" data-view="all" onclick="setView('all')">
-        <span class="nav-left"><span class="dot" style="background: var(--accent)"></span><span class="label">Alle aktive opgaver</span></span>
-        <span class="count-badge" id="count-all">0</span>
-      </button>
-
-      <button class="nav-btn" data-view="urgent" onclick="setView('urgent')">
-        <span class="nav-left"><span class="dot" style="background: #f87171"></span><span class="label">Forfaldne &amp; Næste 7 dage</span></span>
-        <span class="count-badge warn" id="count-urgent">0</span>
-      </button>
-
-      <div class="nav-section-label">Arbejdsbeskrivelse</div>
-      <div id="category-nav"></div>
-    </div>
-
-    <div class="sidebar-footer">
-      <div class="font-controls">
-        <span>Tekststørrelse</span>
-        <div class="font-btns">
-          <button class="font-step-btn" onclick="changeFontScale(-0.1)" title="Mindre tekst">A-</button>
-          <button class="font-step-btn" onclick="changeFontScale(0.1)" title="Større tekst">A+</button>
-        </div>
-      </div>
-
-      <button class="nav-btn" data-view="done" onclick="setView('done')">
-        <span class="nav-left"><span class="dot" style="background: #93908a"></span><span class="label">Afsluttede</span></span>
-        <span class="count-badge" id="count-done">0</span>
-      </button>
-      <button class="nav-btn" data-view="keywords" onclick="setView('keywords')">
-        <span class="nav-left"><span class="dot" style="background: #34d399"></span><span class="label">Nøgleord &amp; Regler</span></span>
-      </button>
-      <button class="nav-btn" onclick="copyStatusReport()">
-        <span class="nav-left"><span class="dot" style="background: #fbbf24"></span><span class="label">Kopiér statusrapport</span></span>
-      </button>
-      <button class="nav-btn" onclick="exportJSON()">
-        <span class="nav-left"><span class="dot" style="background: #60a5fa"></span><span class="label">Eksportér JSON backup</span></span>
-      </button>
-      <button class="nav-btn" onclick="document.getElementById('import-file').click()">
-        <span class="nav-left"><span class="dot" style="background: #c084fc"></span><span class="label">Importér JSON backup</span></span>
-      </button>
-      <input type="file" id="import-file" accept=".json" style="display:none" onchange="importJSON(event)" />
-    </div>
-  </aside>
-
-  <!-- HOVEDINDHOLD -->
-  <main class="main" onclick="closeSidebarOnOutsideClick(event)">
-    <div class="mobile-header">
-      <button class="menu-toggle" onclick="toggleSidebar(event)">☰ Kategorier</button>
-      <div class="font-btns">
-        <button class="font-step-btn" onclick="changeFontScale(-0.1)">A-</button>
-        <button class="font-step-btn" onclick="changeFontScale(0.1)">A+</button>
-      </div>
-    </div>
-
-    <!-- SPOTLIGHT OPRETTELSESFELT -->
-    <section class="spotlight-box">
-      <input
-        type="text"
-        id="task-input"
-        class="spotlight-input"
-        placeholder="Hvad skal der følges op på? (Skriv f.eks. eSOP, træning, sponsor, RUNI...)"
-        oninput="handleLiveCategorize()"
-        onkeydown="if(event.key==='Enter') addTask()"
-      />
-      <div class="spotlight-controls">
-        <div class="controls-left">
-          <button type="button" class="cat-pill-btn" id="selected-cat-pill" onclick="cycleManualCategory()" title="Klik for at skifte kategori manuelt">
-            <span class="dot" id="pill-dot"></span>
-            <span id="pill-label">C&amp;A &amp; Projektintegration</span>
-          </button>
-          <span class="auto-hint" id="auto-status">Standard</span>
+<div class="app-container">
+    <!-- TOP HEADER -->
+    <header class="top-header">
+        <div class="brand-group">
+            <div class="brand-badge">CM</div>
+            <div>
+                <div class="brand-title">Change Master Cockpit</div>
+                <div class="brand-sub" id="dateHeader">LommeLog Edition · Offline Auto-Gem</div>
+            </div>
         </div>
 
-        <div class="controls-left">
-          <input type="text" id="board-input" class="mini-input" placeholder="Tavle (f.eks. eSOP)" style="width:155px" />
-          <input type="date" id="date-input" class="mini-input" />
-          <select id="prio-input" class="mini-select">
-            <option value="">Prioritet</option>
-            <option value="Høj prioritet">Høj</option>
-            <option value="Medium prioritet">Medium</option>
-            <option value="Lav prioritet">Lav</option>
-          </select>
-          <button type="button" class="add-btn" onclick="addTask()">Tilføj</button>
+        <nav class="pill-nav">
+            <button class="pill-btn active" id="tab-cockpit" onclick="switchTab('cockpit')">Cockpit & Ugeplan</button>
+            <button class="pill-btn" id="tab-list" onclick="switchTab('list')">Alle Opgaver</button>
+        </nav>
+
+        <div class="header-tools">
+            <!-- FONT SCALE (LOMMELOG FEATURE) -->
+            <button class="tool-chip" onclick="adjustFont(-1)" title="Mindre tekst">A-</button>
+            <button class="tool-chip" onclick="adjustFont(1)" title="Større tekst">A+</button>
+
+            <!-- ACCENT SWITCH -->
+            <button class="tool-chip" onclick="cycleAccent()" title="Skift accentfarve">Tema</button>
+
+            <!-- FILTER CHIPS -->
+            <button class="tool-chip active" id="chipMine" onclick="toggleMine()">Kun mig (✅)</button>
+            <button class="tool-chip" id="chipHideDone" onclick="toggleDoneFilter()">Skjul færdige</button>
+
+            <!-- FOCUS TIMER -->
+            <div class="timer-pill" id="timerBox">
+                <span class="timer-readout" id="timerClock">25:00</span>
+                <button class="btn-accent" style="padding:4px 10px;" id="timerBtn" onclick="toggleTimer()">Start</button>
+                <button class="icon-btn" onclick="resetTimer()" title="Nulstil"><svg class="icon"><use href="#i-close"/></svg></button>
+            </div>
+
+            <!-- JSON BACKUP -->
+            <button class="tool-chip" onclick="exportJson()" title="Gem JSON backup"><svg class="icon"><use href="#i-down"/></svg> Backup</button>
+            <button class="tool-chip" onclick="document.getElementById('jsonIn').click()" title="Indlæs JSON backup"><svg class="icon"><use href="#i-up"/></svg> Hent</button>
+            <input type="file" id="jsonIn" accept=".json" style="display:none;" onchange="importJson(event)">
         </div>
-      </div>
+    </header>
+
+    <!-- KPI BAR -->
+    <section class="kpi-strip">
+        <div class="kpi-box" onclick="switchTab('cockpit')">
+            <div><div class="kpi-lbl">Samlet Fremdrift</div><div style="font-size:0.72rem;color:var(--text-muted);">Gennemsnit i zonen</div></div>
+            <div class="kpi-val" style="color:var(--accent);" id="kpiAvg">0%</div>
+        </div>
+        <div class="kpi-box" onclick="switchTab('list')">
+            <div><div class="kpi-lbl">I Gang</div><div style="font-size:0.72rem;color:var(--text-muted);">Aktive spor</div></div>
+            <div class="kpi-val" id="kpiActive">0</div>
+        </div>
+        <div class="kpi-box" onclick="switchTab('list')">
+            <div><div class="kpi-lbl">Kritiske (&lt; 7d)</div><div style="font-size:0.72rem;color:var(--text-muted);">Kræver handling</div></div>
+            <div class="kpi-val" style="color:var(--crimson);" id="kpiCrit">0</div>
+        </div>
+        <div class="kpi-box" onclick="switchTab('list')">
+            <div><div class="kpi-lbl">Fuldførte</div><div style="font-size:0.72rem;color:var(--text-muted);">Afsluttede</div></div>
+            <div class="kpi-val" style="color:var(--cyan);" id="kpiDone">0</div>
+        </div>
     </section>
 
-    <!-- DYNAMISK VISNING -->
-    <div id="content-area"></div>
-  </main>
+    <!-- VIEW 1: COCKPIT (2-COLUMN LOMMELOG SPLIT) -->
+    <div class="page-view active" id="view-cockpit">
+        <div class="cockpit-split">
+            <!-- LEFT COLUMN: QUICK ADD, 6 AREAS & FOCUS TASKS -->
+            <div class="panel-box">
+                <div class="section-head">
+                    <span>Hurtig Registrering</span>
+                    <span style="font-size:0.68rem; color:var(--accent);">Auto-kategorisering</span>
+                </div>
 
-  <div id="toast" class="toast"></div>
+                <div class="quick-box">
+                    <input type="text" id="quickTitle" placeholder="Skriv opgave eller logpunkt... (Enter)" onkeydown="if(event.key==='Enter') addQuickTask()">
+                    <div class="quick-row">
+                        <select id="quickArea">
+                            <option value="Auto">Auto-område (nøgleord)</option>
+                            <option value="Projekt & Plan">1. Projekt & Plan</option>
+                            <option value="Sponsor & Ledelse">2. Sponsor & Ledelse</option>
+                            <option value="Kommunikation">3. Kommunikation</option>
+                            <option value="Forankring & Drift">4. Forankring & Drift</option>
+                            <option value="eSOP & Træning">5. eSOP & Træning</option>
+                            <option value="6S & Sikkerhed">6. 6S & Sikkerhed</option>
+                        </select>
+                        <select id="quickDay" style="max-width:115px;">
+                            <option value="Mandag-onsdag">Man–Ons</option>
+                            <option value="Torsdag">Torsdag</option>
+                            <option value="Fredag">Fredag</option>
+                            <option value="Ikke planlagt">Backlog</option>
+                        </select>
+                        <button class="btn-accent" onclick="addQuickTask()"><svg class="icon"><use href="#i-plus"/></svg></button>
+                    </div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-top:2px;">
+                        <button class="area-pill" onclick="addFromTemplate('6S Audit')">+ 6S Audit</button>
+                        <button class="area-pill" onclick="addFromTemplate('eSOP Opdatering')">+ eSOP</button>
+                        <button class="area-pill" onclick="addFromTemplate('Slr Måling')">+ Slr Måling</button>
+                    </div>
+                </div>
 
-  <script>
-    const DEFAULT_CATEGORIES = [
-      {
-        id: "ca",
-        name: "C&A & Projektintegration",
-        color: "#60a5fa",
-        desc: "Fokusere på menneskesiden af projekter og sikre, at C&A-aktiviteter integreres i projektplanerne i tæt samarbejde med projektlederne.",
-        keywords: ["projekt", "projektplan", "projektleder", "projekttavle", "task force", "c&a", "change", "menneskesiden", "interessent", "rasci", "tidsplan", "milepæl", "ombyg", "runi", "wincc", "mmr", "cloud"]
-      },
-      {
-        id: "comm",
-        name: "Forandringskommunikation",
-        color: "#c084fc",
-        desc: "Sikre og understøtte projekternes kommunikationsindsats og den samlede kommunikationsplan (hvorfor & betydning i hverdagen).",
-        keywords: ["kommunikation", "kommunikationsplan", "hvorfor", "budskab", "nyhedsbrev", "infoskærm", "tavlemøde", "præsentation", "orientering", "dialog", "fortælling"]
-      },
-      {
-        id: "users",
-        name: "Understøttelse af slutbrugere",
-        color: "#34d399",
-        desc: "Understøtte det lokale ejerskab, samt støtte de ansvarlige undervejs, så organisationen forstår og mestrer nye funktioner og arbejdsmetoder.",
-        keywords: ["slutbruger", "ejerskab", "operatør", "hjælp til", "driftskontrolant", "træning", "oplæring", "sidemandsoplæring", "arbejdsmetode", "superbruger", "mestre", "støtte"]
-      },
-      {
-        id: "sponsors",
-        name: "Sponsorer & Ledere",
-        color: "#fbbf24",
-        desc: "Understøtte sponsorkoalitionen og klæde sponsorer og people managers på til deres forandringsroller.",
-        keywords: ["sponsor", "sponsorkoalition", "leder", "ledere", "people manager", "arbejdsleder", "teamleder", "ledelse", "forandringsrolle", "sparring", "klæde på"]
-      },
-      {
-        id: "anchoring",
-        name: "Forankring & Opfølgning",
-        color: "#f472b6",
-        desc: "Sikre opfølgning på implementering af nye værktøjer og arbejdsmåder, og fejre succeser i de relevante afdelinger.",
-        keywords: ["forankring", "opfølgning", "følg op", "implementering", "fejre", "succes", "audit", "6s", "eftersyn", "fastholdelse", "evaluering", "status"]
-      },
-      {
-        id: "esop",
-        name: "Dokumentation & eSOP",
-        color: "#fb923c",
-        desc: "Deltage i og drive eSOP som forandringsprojekt; sikre træning i udarbejdelse af eSOPs og understøtte introduktionen.",
-        keywords: ["esop", "sop", "instruks", "procedure", "betjeningsvejledning", "betjeningsvejledninger", "dokumentation", "vejledning", "kold-ende", "vedligehold", "oem"]
-      }
+                <div class="section-head">
+                    <span>6 Ansvarsområder</span>
+                    <span id="activeAreaLabel" style="color:var(--accent);">Alle</span>
+                </div>
+                <div class="area-pills" id="areaFilterPills"></div>
+
+                <div class="section-head" style="margin-top:4px;">
+                    <span style="display:flex; align-items:center; gap:6px;"><svg class="icon" style="color:var(--amber);"><use href="#i-star"/></svg> Primært Fokus (Eat That Frog)</span>
+                </div>
+                <div id="frogList" style="display:flex; flex-direction:column; gap:8px;"></div>
+            </div>
+
+            <!-- RIGHT COLUMN: 3-DAY WEEK PLANNER -->
+            <div class="panel-box">
+                <div class="section-head">
+                    <span>Ugeplan & Tidsblokke (Træk og slip kort)</span>
+                    <input type="text" id="searchInput" class="inline-ctrl" placeholder="Søg i opgaver..." oninput="renderAll()" style="width:200px;">
+                </div>
+
+                <div class="week-3col">
+                    <div class="day-column" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDropDay(event, 'Mandag-onsdag')">
+                        <div class="day-col-header"><span>Mandag – Onsdag</span><span id="c-mon">0</span></div>
+                        <div id="list-mon" style="display:flex; flex-direction:column; gap:8px;"></div>
+                    </div>
+                    <div class="day-column" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDropDay(event, 'Torsdag')">
+                        <div class="day-col-header"><span>Torsdag</span><span id="c-thu">0</span></div>
+                        <div id="list-thu" style="display:flex; flex-direction:column; gap:8px;"></div>
+                    </div>
+                    <div class="day-column" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDropDay(event, 'Fredag')">
+                        <div class="day-col-header"><span>Fredag</span><span id="c-fri">0</span></div>
+                        <div id="list-fri" style="display:flex; flex-direction:column; gap:8px;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW 2: FULL TASK LIST -->
+    <div class="page-view" id="view-list">
+        <div class="panel-box">
+            <div class="section-head">
+                <span>Samlet Opgaveliste</span>
+                <button class="btn-accent" onclick="openNewModal()"><svg class="icon"><use href="#i-plus"/></svg> Ny Opgave</button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width:40px;">Mig</th>
+                            <th style="width:40px;">Fokus</th>
+                            <th>Opgave</th>
+                            <th style="width:140px;">Ansvarsområde</th>
+                            <th style="width:125px;">Ugedag</th>
+                            <th style="width:125px;">Dato</th>
+                            <th style="width:95px;">Prioritet</th>
+                            <th style="width:110px;">Status</th>
+                            <th style="width:70px;">%</th>
+                            <th style="width:65px; text-align:right;">Slet</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fullTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- EDIT MODAL -->
+<div class="modal-bg" id="editModal" onclick="if(event.target===this) closeModal()">
+    <div class="modal-box">
+        <div class="section-head">
+            <span style="color:var(--accent);">Opgavedetaljer & Checkliste</span>
+            <button class="icon-btn" onclick="closeModal()"><svg class="icon"><use href="#i-close"/></svg></button>
+        </div>
+
+        <div class="m-field">
+            <label>Titel</label>
+            <input type="text" id="mName">
+        </div>
+
+        <div class="modal-grid">
+            <div class="m-field">
+                <label>Ansvarsområde</label>
+                <select id="mArea">
+                    <option value="Projekt & Plan">1. Projekt & Plan</option>
+                    <option value="Sponsor & Ledelse">2. Sponsor & Ledelse</option>
+                    <option value="Kommunikation">3. Kommunikation</option>
+                    <option value="Forankring & Drift">4. Forankring & Drift</option>
+                    <option value="eSOP & Træning">5. eSOP & Træning</option>
+                    <option value="6S & Sikkerhed">6. 6S & Sikkerhed</option>
+                </select>
+            </div>
+            <div class="m-field">
+                <label>Planlagt dag</label>
+                <select id="mDay">
+                    <option value="Mandag-onsdag">Mandag–Onsdag</option>
+                    <option value="Torsdag">Torsdag</option>
+                    <option value="Fredag">Fredag</option>
+                    <option value="Ikke planlagt">Ikke planlagt</option>
+                </select>
+            </div>
+            <div class="m-field">
+                <label>Prioritet</label>
+                <select id="mPrio">
+                    <option value="Høj">Høj</option>
+                    <option value="Mellem">Mellem</option>
+                    <option value="Lav">Lav</option>
+                </select>
+            </div>
+            <div class="m-field">
+                <label>Status</label>
+                <select id="mStatus">
+                    <option value="Igangsat">Igangsat</option>
+                    <option value="Venter">Venter</option>
+                    <option value="Fuldført">Fuldført</option>
+                </select>
+            </div>
+            <div class="m-field">
+                <label>Dato</label>
+                <input type="date" id="mDate">
+            </div>
+            <div class="m-field">
+                <label>Fremdrift (%)</label>
+                <input type="number" id="mPct" min="0" max="100">
+            </div>
+        </div>
+
+        <div class="m-field">
+            <label>Noter / Log</label>
+            <textarea id="mNote" placeholder="Skriv kommentar, status eller næste skridt..."></textarea>
+        </div>
+
+        <div class="m-field">
+            <label>Underopgaver</label>
+            <div id="mSubList"></div>
+            <button class="tool-chip" style="justify-content:center;" onclick="addSubItem()"><svg class="icon"><use href="#i-plus"/></svg> Tilføj underopgave</button>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; border-top:1px solid var(--border); padding-top:12px;">
+            <button class="tool-chip" style="color:var(--crimson); border-color:var(--crimson);" onclick="deleteFromModal()">Slet opgave</button>
+            <button class="btn-accent" onclick="saveModal()">Gem & Luk</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const KEY_TASKS = "cm_cockpit_lommelog_tasks";
+    const KEY_PREFS = "cm_cockpit_lommelog_prefs";
+
+    const AREAS = [
+        "Projekt & Plan",
+        "Sponsor & Ledelse",
+        "Kommunikation",
+        "Forankring & Drift",
+        "eSOP & Træning",
+        "6S & Sikkerhed"
     ];
 
-    const INITIAL_TASKS = [
-      { id: "t1", title: "Blækanlæg", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-20", priority: "", note: "", done: false },
-      { id: "t2", title: "Vægte til færdigvarer", categoryId: "ca", board: "Task Force", status: "Igangsat", date: "2026-11-19", priority: "Høj prioritet", note: "", done: false },
-      { id: "t3", title: "Hjælp til Driftskontrolant eSOP: Udtagningsfrekvens", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-16", priority: "", note: "", done: false },
-      { id: "t4", title: "Laves ny eSOP til Opfyldning af råvare", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-24", priority: "", note: "", done: false },
-      { id: "t5", title: "Overvågning og tømning af betontank", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-11-16", priority: "", note: "", done: false },
-      { id: "t6", title: "7 - Ovnbygning: Dæk 2+3 - 6S - Nødvendige eSOPs ikke opdateret", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-12-02", priority: "", note: "", done: false },
-      { id: "t7", title: "Foranstaltninger ved arbejde med og omkring hængende vægt", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-11-16", priority: "Medium prioritet", note: "", done: false },
-      { id: "t8", title: "Tilføjelse til eSOP Trådning af synål", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-14", priority: "", note: "", done: false },
-      { id: "t9", title: "eSOp ønskes på visuel kontrol", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-11-23", priority: "Medium prioritet", note: "", done: false },
-      { id: "t10", title: "Procedure for skift af hønsetråd", categoryId: "esop", board: "Kold-ende", status: "Igangsat", date: "2027-01-18", priority: "", note: "", done: false },
-      { id: "t11", title: "Ombyg hættestrækker - trådning af folie", categoryId: "ca", board: "Projekttavle", status: "Igangsat", date: "2026-11-16", priority: "", note: "", done: false },
-      { id: "t12", title: "trækstyrke (KUN OEM'er)", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-02", priority: "Medium prioritet", note: "", done: false },
-      { id: "t13", title: "Vedligeholdelse af delamineringen (Vokskar tøm og rens)", categoryId: "esop", board: "eSOP", status: "Venter", date: "2026-12-14", priority: "", note: "", done: false },
-      { id: "t14", title: "Opdatering af betjeningsvejledninger", categoryId: "esop", board: "Vedligehold", status: "Igangsat", date: "2026-11-16", priority: "Lav prioritet", note: "", done: false },
-      { id: "t15", title: "Fines brænder", categoryId: "esop", board: "eSOP", status: "Igangsat", date: "2026-12-14", priority: "Medium prioritet", note: "", done: false }
+    const DEFAULT_TASKS = [
+        {"id":"t1","name":"Overvågning og tømning af dontank","area":"Forankring & Drift","responsible":true,"status":"Igangsat","priority":"Lav","date":"2026-11-25","pct":25,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t2","name":"Ændringer til eSOP","area":"eSOP & Træning","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-11-23","pct":10,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t3","name":"Slr måling","area":"6S & Sikkerhed","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-11-20","pct":0,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t4","name":"7 - Ovnbygning: Dæk 2+3 - 6S - Nødvendige eSOPs ikke opdateret","area":"6S & Sikkerhed","responsible":true,"status":"Igangsat","priority":"Mellem","date":"2026-11-24","pct":0,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t5","name":"Tilføjelse til eSOP Trådning af synål","area":"eSOP & Træning","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-11-21","pct":40,"note":"","isFrog":true,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t8","name":"eSOP ønskes på visuel kontrol","area":"eSOP & Træning","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-11-26","pct":15,"note":"","isFrog":false,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t11","name":"Trækstyrke (KUN OEM'er)","area":"Forankring & Drift","responsible":true,"status":"Igangsat","priority":"Høj","date":"2026-11-21","pct":50,"note":"","isFrog":true,"plannedDay":"Mandag-onsdag","subtasks":[]},
+        {"id":"t15","name":"Fines brænder","area":"Forankring & Drift","responsible":true,"status":"Igangsat","priority":"Mellem","date":"2026-11-26","pct":0,"note":"","isFrog":false,"plannedDay":"Torsdag","subtasks":[]}
     ];
 
-    const STORAGE_KEY = "cm_cockpit_v6";
-    const FONT_KEY = "cm_cockpit_font_scale";
+    let tasks = [];
+    let onlyMine = true;
+    let hideDone = false;
+    let selectedArea = "ALL";
+    let fontScale = 15;
+    let accentTheme = "emerald";
+    let draggedId = null;
+    let editId = null;
+    let modalSubs = [];
 
-    let state = loadState();
-    let currentView = "all";
-    let selectedCategoryId = "ca";
-    let manualOverride = false;
-    let searchQuery = "";
-    let boardFilter = "";
-    let statusFilter = "";
-    let sortBy = "date";
-    let openNotes = {};
-    let fontScale = parseFloat(localStorage.getItem(FONT_KEY)) || 1.25;
+    let timerSec = 25 * 60;
+    let timerRunning = false;
+    let timerInt = null;
 
-    function showToast(msg) {
-      const t = document.getElementById("toast");
-      t.textContent = msg;
-      t.classList.add("show");
-      clearTimeout(t._timer);
-      t._timer = setTimeout(() => t.classList.remove("show"), 2800);
+    function detectAreaFromText(text) {
+        const s = text.toLowerCase();
+        if (s.includes("esop") || s.includes("e-sop") || s.includes("træning") || s.includes("video") || s.includes("vejledning")) return "eSOP & Træning";
+        if (s.includes("6s") || s.includes("apv") || s.includes("sikkerhed") || s.includes("mmr") || s.includes("slr")) return "6S & Sikkerhed";
+        if (s.includes("sponsor") || s.includes("leder") || s.includes("status") || s.includes("møde")) return "Sponsor & Ledelse";
+        if (s.includes("kommunikation") || s.includes("tavle") || s.includes("info") || s.includes("story")) return "Kommunikation";
+        if (s.includes("runi") || s.includes("wincc") || s.includes("cloud") || s.includes("plan")) return "Projekt & Plan";
+        return "Forankring & Drift";
     }
 
-    function applyFontScale() {
-      document.documentElement.style.setProperty("--font-scale", fontScale.toFixed(2));
-      localStorage.setItem(FONT_KEY, fontScale.toFixed(2));
-    }
+    function init() {
+        const saved = localStorage.getItem(KEY_TASKS);
+        tasks = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_TASKS));
+        tasks.forEach(t => {
+            if (!t.area) t.area = detectAreaFromText(t.name);
+            if (!t.subtasks) t.subtasks = [];
+        });
 
-    function changeFontScale(delta) {
-      fontScale = Math.min(1.75, Math.max(0.95, fontScale + delta));
-      applyFontScale();
-    }
-
-    function loadState() {
-      try {
-        const raw = localStorage.getItem(STORAGE_KEY) || localStorage.getItem("cm_cockpit_v5") || localStorage.getItem("cm_cockpit_v4");
-        if (raw) {
-          const parsed = JSON.parse(raw);
-          if (parsed.categories && parsed.tasks) {
-            parsed.tasks = parsed.tasks.map(t => ({ note: "", ...t }));
-            return parsed;
-          }
+        const prefs = JSON.parse(localStorage.getItem(KEY_PREFS) || "{}");
+        if (prefs.fontScale) {
+            fontScale = prefs.fontScale;
+            document.documentElement.style.setProperty("--font-scale", fontScale + "px");
         }
-      } catch (e) {}
-      return { categories: DEFAULT_CATEGORIES, tasks: INITIAL_TASKS };
-    }
-
-    function saveState() {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    }
-
-    function getDueInfo(dateStr) {
-      if (!dateStr) return null;
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      const target = new Date(dateStr + "T00:00:00");
-      if (isNaN(target.getTime())) return null;
-      const diffDays = Math.round((target - today) / (1000 * 60 * 60 * 24));
-      if (diffDays < 0) return { type: "overdue", label: `Overskredet (${Math.abs(diffDays)}d)` };
-      if (diffDays === 0) return { type: "soon", label: "I dag" };
-      if (diffDays <= 7) return { type: "soon", label: `Om ${diffDays}d` };
-      return null;
-    }
-
-    function isUrgentTask(task) {
-      if (task.done || !task.date) return false;
-      const info = getDueInfo(task.date);
-      return info !== null;
-    }
-
-    function detectCategory(text) {
-      const lower = text.toLowerCase();
-      let bestId = null;
-      let bestScore = 0;
-
-      for (const cat of state.categories) {
-        let score = 0;
-        for (const kw of cat.keywords) {
-          if (kw && lower.includes(kw.toLowerCase())) {
-            score += kw.length > 4 ? 2 : 1;
-          }
+        if (prefs.accent) {
+            accentTheme = prefs.accent;
+            document.body.setAttribute("data-accent", accentTheme);
         }
-        if (score > bestScore) {
-          bestScore = score;
-          bestId = cat.id;
-        }
-      }
-      return bestId;
+
+        document.getElementById("dateHeader").innerText =
+            new Date().toLocaleDateString("da-DK", { weekday: "long", day: "numeric", month: "short" }) + " · LommeLog Edition · Gemt lokalt";
+
+        renderAll();
     }
 
-    function reCategorizeAllActive() {
-      let moved = 0;
-      for (const task of state.tasks) {
-        if (task.done) continue;
-        const matched = detectCategory(`${task.title} ${task.board || ""}`);
-        if (matched && matched !== task.categoryId) {
-          task.categoryId = matched;
-          moved++;
-        }
-      }
-      saveState();
-      render();
-      showToast(moved > 0 ? `${moved} opgaver blev flyttet ud fra dine nøgleord.` : "Alle aktive opgaver matcher allerede reglerne.");
+    function persist() {
+        localStorage.setItem(KEY_TASKS, JSON.stringify(tasks));
+        localStorage.setItem(KEY_PREFS, JSON.stringify({ fontScale, accent: accentTheme }));
     }
 
-    function handleLiveCategorize() {
-      const text = document.getElementById("task-input").value;
-      if (!text.trim()) {
-        manualOverride = false;
-        if (state.categories.some(c => c.id === currentView)) {
-          selectedCategoryId = currentView;
-        } else {
-          selectedCategoryId = state.categories[0].id;
-        }
-        updatePillUI("Standard");
-        return;
-      }
-
-      if (manualOverride) return;
-
-      const matched = detectCategory(text);
-      if (matched) {
-        selectedCategoryId = matched;
-        updatePillUI("Auto-match på nøgleord");
-      } else {
-        selectedCategoryId = state.categories.some(c => c.id === currentView) ? currentView : state.categories[0].id;
-        updatePillUI("Ingen match — standard");
-      }
+    function adjustFont(delta) {
+        fontScale = Math.max(12, Math.min(19, fontScale + delta));
+        document.documentElement.style.setProperty("--font-scale", fontScale + "px");
+        persist();
     }
 
-    function cycleManualCategory() {
-      const idx = state.categories.findIndex(c => c.id === selectedCategoryId);
-      const next = state.categories[(idx + 1) % state.categories.length];
-      selectedCategoryId = next.id;
-      manualOverride = true;
-      updatePillUI("Valgt manuelt");
+    function cycleAccent() {
+        const list = ["emerald", "crimson", "cyan"];
+        accentTheme = list[(list.indexOf(accentTheme) + 1) % list.length];
+        document.body.setAttribute("data-accent", accentTheme);
+        persist();
     }
 
-    function updatePillUI(hintText) {
-      const cat = state.categories.find(c => c.id === selectedCategoryId) || state.categories[0];
-      document.getElementById("pill-dot").style.backgroundColor = cat.color;
-      document.getElementById("pill-label").textContent = cat.name;
-      if (hintText) document.getElementById("auto-status").textContent = hintText;
+    function switchTab(tab) {
+        document.querySelectorAll(".page-view").forEach(v => v.classList.remove("active"));
+        document.getElementById("view-" + tab).classList.add("active");
+        document.querySelectorAll(".pill-btn").forEach(b => b.classList.remove("active"));
+        document.getElementById("tab-" + tab).classList.add("active");
+        renderAll();
     }
 
-    function addTask() {
-      const input = document.getElementById("task-input");
-      const title = input.value.trim();
-      if (!title) return;
-
-      const board = document.getElementById("board-input").value.trim();
-      const date = document.getElementById("date-input").value;
-      const priority = document.getElementById("prio-input").value;
-
-      state.tasks.unshift({
-        id: "t_" + Date.now(),
-        title,
-        categoryId: selectedCategoryId,
-        board,
-        status: "Igangsat",
-        date,
-        priority,
-        note: "",
-        done: false
-      });
-
-      input.value = "";
-      document.getElementById("board-input").value = "";
-      document.getElementById("date-input").value = "";
-      document.getElementById("prio-input").value = "";
-      manualOverride = false;
-      handleLiveCategorize();
-      saveState();
-      render();
-      showToast("Opgave tilføjet");
+    function toggleMine() {
+        onlyMine = !onlyMine;
+        document.getElementById("chipMine").classList.toggle("active", onlyMine);
+        renderAll();
     }
 
-    function toggleDone(id) {
-      const task = state.tasks.find(t => t.id === id);
-      if (task) {
-        task.done = !task.done;
-        saveState();
-        render();
-      }
+    function toggleDoneFilter() {
+        hideDone = !hideDone;
+        document.getElementById("chipHideDone").classList.toggle("active", hideDone);
+        renderAll();
     }
 
-    function updateTaskField(id, field, value) {
-      const task = state.tasks.find(t => t.id === id);
-      if (task) {
-        task[field] = value;
-        saveState();
-        if (field !== "note") render();
-      }
+    function getVisibleTasks() {
+        const q = (document.getElementById("searchInput")?.value || "").toLowerCase();
+        return tasks.filter(t => {
+            if (onlyMine && !t.responsible) return false;
+            if (hideDone && t.status === "Fuldført") return false;
+            if (selectedArea !== "ALL" && t.area !== selectedArea) return false;
+            if (q && !t.name.toLowerCase().includes(q) && !(t.area || "").toLowerCase().includes(q)) return false;
+            return true;
+        });
     }
 
-    function postponeOneWeek(id) {
-      const task = state.tasks.find(t => t.id === id);
-      if (!task) return;
-      const base = task.date ? new Date(task.date + "T00:00:00") : new Date();
-      base.setDate(base.getDate() + 7);
-      const yyyy = base.getFullYear();
-      const mm = String(base.getMonth() + 1).padStart(2, "0");
-      const dd = String(base.getDate()).padStart(2, "0");
-      task.date = `${yyyy}-${mm}-${dd}`;
-      saveState();
-      render();
-      showToast(`Ny dato: ${dd}-${mm}-${yyyy}`);
+    function addQuickTask() {
+        const inp = document.getElementById("quickTitle");
+        const title = inp.value.trim();
+        if (!title) return;
+        const chosenArea = document.getElementById("quickArea").value;
+        const area = chosenArea === "Auto" ? detectAreaFromText(title) : chosenArea;
+
+        tasks.unshift({
+            id: "t_" + Date.now(),
+            name: title,
+            area,
+            responsible: true,
+            status: "Igangsat",
+            priority: "Mellem",
+            date: new Date().toISOString().split("T")[0],
+            pct: 0,
+            note: "",
+            isFrog: false,
+            plannedDay: document.getElementById("quickDay").value,
+            subtasks: []
+        });
+        inp.value = "";
+        persist();
+        renderAll();
     }
 
-    function toggleNoteBox(id) {
-      openNotes[id] = !openNotes[id];
-      render();
+    function addFromTemplate(type) {
+        const map = {
+            "6S Audit": { area: "6S & Sikkerhed", prio: "Høj", subs: [{title:"Gennemgå arbejdsområde",done:false},{title:"Identificer afvigelser",done:false},{title:"Opdater tavle",done:false}] },
+            "eSOP Opdatering": { area: "eSOP & Træning", prio: "Mellem", subs: [{title:"Verificer proces",done:false},{title:"Optag billeder/video",done:false},{title:"Frigiv eSOP",done:false}] },
+            "Slr Måling": { area: "6S & Sikkerhed", prio: "Høj", subs: [{title:"Udfør måling",done:false},{title:"Log resultat",done:false}] }
+        };
+        const tpl = map[type];
+        tasks.unshift({
+            id: "t_" + Date.now(),
+            name: type,
+            area: tpl.area,
+            responsible: true,
+            status: "Igangsat",
+            priority: tpl.prio,
+            date: new Date().toISOString().split("T")[0],
+            pct: 0,
+            note: "",
+            isFrog: false,
+            plannedDay: "Mandag-onsdag",
+            subtasks: tpl.subs
+        });
+        persist();
+        renderAll();
     }
 
-    function updateTaskTitle(id, newTitle) {
-      const task = state.tasks.find(t => t.id === id);
-      const clean = newTitle.trim();
-      if (task && clean) {
-        task.title = clean;
-        saveState();
-      }
+    function renderAll() {
+        const vis = getVisibleTasks();
+
+        // KPIs
+        const active = vis.filter(t => t.status !== "Fuldført");
+        const done = vis.filter(t => t.status === "Fuldført");
+        const crit = active.filter(t => ((new Date(t.date) - new Date()) / 86400000) <= 7);
+        const avg = vis.length ? Math.round(vis.reduce((a, b) => a + (b.pct || 0), 0) / vis.length) : 0;
+
+        document.getElementById("kpiAvg").innerText = avg + "%";
+        document.getElementById("kpiActive").innerText = active.length;
+        document.getElementById("kpiCrit").innerText = crit.length;
+        document.getElementById("kpiDone").innerText = done.length;
+
+        // Area pills
+        const areaBox = document.getElementById("areaFilterPills");
+        areaBox.innerHTML = ["ALL", ...AREAS].map(a => `
+            <button class="area-pill ${selectedArea === a ? "active" : ""}" onclick="selectedArea='${a}'; document.getElementById('activeAreaLabel').innerText='${a === 'ALL' ? 'Alle' : a}'; renderAll();">
+                ${a === "ALL" ? "Alle områder" : a}
+            </button>
+        `).join("");
+
+        // Frog list
+        const frogs = vis.filter(t => t.isFrog && t.status !== "Fuldført");
+        const frogEl = document.getElementById("frogList");
+        frogEl.innerHTML = frogs.length ? frogs.map(f => buildCard(f)).join("") :
+            `<div style="font-size:0.8rem; color:var(--text-muted);">Ingen fokusopgaver markeret med ⭐.</div>`;
+
+        // Week columns
+        const cols = [
+            { day: "Mandag-onsdag", list: "list-mon", cnt: "c-mon" },
+            { day: "Torsdag", list: "list-thu", cnt: "c-thu" },
+            { day: "Fredag", list: "list-fri", cnt: "c-fri" }
+        ];
+        cols.forEach(c => {
+            const items = vis.filter(t => t.plannedDay === c.day);
+            document.getElementById(c.cnt).innerText = items.length;
+            document.getElementById(c.list).innerHTML = items.length
+                ? items.map(buildCard).join("")
+                : `<div style="text-align:center; font-size:0.75rem; color:var(--text-muted); padding:24px 0;">Træk opgaver hertil</div>`;
+        });
+
+        // Full Table
+        const tbody = document.getElementById("fullTableBody");
+        tbody.innerHTML = vis.map(t => `
+            <tr class="${t.status === 'Fuldført' ? 'done' : ''}">
+                <td><button class="icon-btn" onclick="updateField('${t.id}','responsible',${!t.responsible})">${t.responsible ? "✅" : "❌"}</button></td>
+                <td><button class="icon-btn ${t.isFrog ? 'star-on' : ''}" onclick="updateField('${t.id}','isFrog',${!t.isFrog})"><svg class="icon"><use href="#i-star"/></svg></button></td>
+                <td style="font-weight:700; cursor:pointer;" onclick="openEditModal('${t.id}')">${esc(t.name)} ${t.note ? '<svg class="icon" style="color:var(--accent);"><use href="#i-note"/></svg>' : ''}</td>
+                <td><span class="area-tag">${esc(t.area || '')}</span></td>
+                <td>
+                    <select class="inline-ctrl" onchange="updateField('${t.id}','plannedDay',this.value)">
+                        <option value="Ikke planlagt" ${t.plannedDay==='Ikke planlagt'?'selected':''}>Ikke planlagt</option>
+                        <option value="Mandag-onsdag" ${t.plannedDay==='Mandag-onsdag'?'selected':''}>Man–Ons</option>
+                        <option value="Torsdag" ${t.plannedDay==='Torsdag'?'selected':''}>Torsdag</option>
+                        <option value="Fredag" ${t.plannedDay==='Fredag'?'selected':''}>Fredag</option>
+                    </select>
+                </td>
+                <td><input type="date" class="inline-ctrl" value="${t.date}" onchange="updateField('${t.id}','date',this.value)"></td>
+                <td>
+                    <select class="inline-ctrl" onchange="updateField('${t.id}','priority',this.value)">
+                        <option value="Høj" ${t.priority==='Høj'?'selected':''}>Høj</option>
+                        <option value="Mellem" ${t.priority==='Mellem'?'selected':''}>Mellem</option>
+                        <option value="Lav" ${t.priority==='Lav'?'selected':''}>Lav</option>
+                    </select>
+                </td>
+                <td>
+                    <select class="inline-ctrl" onchange="updateField('${t.id}','status',this.value)">
+                        <option value="Igangsat" ${t.status==='Igangsat'?'selected':''}>Igangsat</option>
+                        <option value="Venter" ${t.status==='Venter'?'selected':''}>Venter</option>
+                        <option value="Fuldført" ${t.status==='Fuldført'?'selected':''}>Fuldført</option>
+                    </select>
+                </td>
+                <td><strong>${t.pct}%</strong></td>
+                <td style="text-align:right;"><button class="icon-btn del" onclick="deleteTask('${t.id}')"><svg class="icon"><use href="#i-trash"/></svg></button></td>
+            </tr>
+        `).join("");
+    }
+
+    function buildCard(t) {
+        const subDone = (t.subtasks || []).filter(s => s.done).length;
+        const subTot = (t.subtasks || []).length;
+        return `
+            <div class="ll-card prio-${t.priority} ${t.status === 'Fuldført' ? 'done' : ''}"
+                 draggable="true" ondragstart="draggedId='${t.id}'" onclick="openEditModal('${t.id}')">
+                <div class="ll-card-top">
+                    <div class="ll-card-title">${esc(t.name)}</div>
+                    <button class="icon-btn ${t.isFrog ? 'star-on' : ''}" onclick="event.stopPropagation(); updateField('${t.id}','isFrog',${!t.isFrog})">
+                        <svg class="icon"><use href="#i-star"/></svg>
+                    </button>
+                </div>
+                <div class="progress-mini"><div class="progress-mini-fill" style="width:${t.pct}%;"></div></div>
+                <div class="ll-card-meta">
+                    <span class="area-tag">${esc(t.area || 'Drift')}</span>
+                    <span>${subTot > 0 ? `☑ ${subDone}/${subTot} · ` : ''}${t.pct}%</span>
+                </div>
+            </div>
+        `;
+    }
+
+    function updateField(id, field, val) {
+        const t = tasks.find(x => x.id === id);
+        if (!t) return;
+        t[field] = val;
+        if (field === "status" && val === "Fuldført") t.pct = 100;
+        persist();
+        renderAll();
     }
 
     function deleteTask(id) {
-      state.tasks = state.tasks.filter(t => t.id !== id);
-      saveState();
-      render();
-    }
-
-    function addKeyword(catId) {
-      const input = document.getElementById("kw-input-" + catId);
-      const val = input.value.trim().toLowerCase();
-      if (!val) return;
-      const cat = state.categories.find(c => c.id === catId);
-      if (cat && !cat.keywords.includes(val)) {
-        cat.keywords.push(val);
-        saveState();
-        render();
-      }
-    }
-
-    function removeKeyword(catId, kw) {
-      const cat = state.categories.find(c => c.id === catId);
-      if (cat) {
-        cat.keywords = cat.keywords.filter(k => k !== kw);
-        saveState();
-        render();
-      }
-    }
-
-    function setView(viewId) {
-      currentView = viewId;
-      searchQuery = "";
-      boardFilter = "";
-      statusFilter = "";
-      if (state.categories.some(c => c.id === viewId) && !manualOverride) {
-        selectedCategoryId = viewId;
-        updatePillUI("Standard for visning");
-      }
-      document.getElementById("sidebar").classList.remove("open");
-      render();
-    }
-
-    function escapeHtml(str) {
-      return (str || "").replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    }
-
-    function formatDateDK(iso) {
-      if (!iso) return "";
-      const p = iso.split("-");
-      return p.length === 3 ? `${p[2]}-${p[1]}-${p[0]}` : iso;
-    }
-
-    function copyStatusReport() {
-      const active = state.tasks.filter(t => !t.done);
-      const todayStr = new Date().toLocaleDateString("da-DK");
-      let lines = [`CHANGE MASTER STATUSOVERSIGT (${todayStr})`, `Aktive opgaver i alt: ${active.length}`, ""];
-
-      for (const cat of state.categories) {
-        const items = active.filter(t => t.categoryId === cat.id);
-        if (items.length === 0) continue;
-        lines.push(`■ ${cat.name.toUpperCase()} (${items.length})`);
-        for (const t of items) {
-          const meta = [
-            t.board ? `Tavle: ${t.board}` : "",
-            t.status || "",
-            t.date ? `Dato: ${formatDateDK(t.date)}` : "",
-            t.priority || ""
-          ].filter(Boolean).join(" | ");
-          lines.push(`  - ${t.title}${meta ? ` [${meta}]` : ""}`);
-          if (t.note && t.note.trim()) {
-            lines.push(`    Note: ${t.note.trim()}`);
-          }
+        const t = tasks.find(x => x.id === id);
+        if (t && confirm(`Slet "${t.name}"?`)) {
+            tasks = tasks.filter(x => x.id !== id);
+            persist();
+            renderAll();
         }
-        lines.push("");
-      }
-
-      const text = lines.join("\n");
-      if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(text).then(() => {
-          showToast("Statusrapport kopieret til udklipsholder — klar til Outlook/Teams!");
-        }).catch(() => fallbackCopy(text));
-      } else {
-        fallbackCopy(text);
-      }
     }
 
-    function fallbackCopy(text) {
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-      showToast("Statusrapport kopieret til udklipsholder!");
-    }
-
-    function render() {
-      const activeTasks = state.tasks.filter(t => !t.done);
-      const urgentTasks = activeTasks.filter(isUrgentTask);
-      const doneTasks = state.tasks.filter(t => t.done);
-
-      document.getElementById("count-all").textContent = activeTasks.length;
-      document.getElementById("count-urgent").textContent = urgentTasks.length;
-      document.getElementById("count-done").textContent = doneTasks.length;
-
-      const navContainer = document.getElementById("category-nav");
-      navContainer.innerHTML = state.categories.map(cat => {
-        const count = activeTasks.filter(t => t.categoryId === cat.id).length;
-        const activeClass = currentView === cat.id ? "active" : "";
-        return `
-          <button class="nav-btn ${activeClass}" onclick="setView('${cat.id}')">
-            <span class="nav-left">
-              <span class="dot" style="background:${cat.color}"></span>
-              <span class="label">${cat.name}</span>
-            </span>
-            <span class="count-badge">${count}</span>
-          </button>
-        `;
-      }).join("");
-
-      document.querySelectorAll(".sidebar > div > .nav-btn, .sidebar-footer > .nav-btn").forEach(btn => {
-        btn.classList.toggle("active", btn.dataset.view === currentView);
-      });
-
-      const content = document.getElementById("content-area");
-
-      if (currentView === "keywords") {
-        content.innerHTML = `
-          <div class="view-header">
-            <div>
-              <h2 class="view-title">Nøgleord &amp; Auto-sortering</h2>
-              <p class="view-subtitle">Tilføj interne projektnavne, tavler eller fagudtryk — appen sorterer automatisk efter disse ord.</p>
-            </div>
-            <button class="report-btn" onclick="reCategorizeAllActive()">↻ Gen-sorter alle aktive opgaver nu</button>
-          </div>
-          ${state.categories.map(cat => `
-            <div class="kw-card">
-              <div class="kw-header">
-                <span class="dot" style="background:${cat.color}"></span>
-                <span>${cat.name}</span>
-              </div>
-              <p class="kw-desc">${cat.desc}</p>
-              <div class="kw-tags">
-                ${cat.keywords.map(kw => `
-                  <span class="kw-chip">${escapeHtml(kw)} <button onclick="removeKeyword('${cat.id}', '${kw.replace(/'/g, "\\'")}')">&times;</button></span>
-                `).join("")}
-              </div>
-              <div class="kw-add-row">
-                <input type="text" id="kw-input-${cat.id}" class="mini-input" placeholder="Tilføj nyt nøgleord..." style="flex:1; max-width:280px;" onkeydown="if(event.key==='Enter') addKeyword('${cat.id}')" />
-                <button class="cat-pill-btn" onclick="addKeyword('${cat.id}')">+ Tilføj ord</button>
-              </div>
-            </div>
-          `).join("")}
-        `;
-        return;
-      }
-
-      let baseList = [];
-      let title = "";
-      let subtitle = "";
-
-      if (currentView === "all") {
-        baseList = activeTasks;
-        title = "Alle aktive opgaver";
-        subtitle = `${activeTasks.length} aktive opgaver fordelt på dine 6 ansvarsområder`;
-      } else if (currentView === "urgent") {
-        baseList = urgentTasks;
-        title = "Forfaldne & Næste 7 dage";
-        subtitle = `${urgentTasks.length} opgaver der kræver opmærksomhed nu`;
-      } else if (currentView === "done") {
-        baseList = doneTasks;
-        title = "Afsluttede opgaver";
-        subtitle = `${doneTasks.length} gennemførte opgaver`;
-      } else {
-        const cat = state.categories.find(c => c.id === currentView);
-        baseList = activeTasks.filter(t => t.categoryId === currentView);
-        title = cat ? cat.name : "";
-        subtitle = cat ? cat.desc : "";
-      }
-
-      // Unikke tavler i den aktuelle visning til hurtigfilter
-      const boards = [...new Set(baseList.map(t => (t.board || "").trim()).filter(Boolean))];
-
-      let filtered = [...baseList];
-      if (boardFilter) {
-        filtered = filtered.filter(t => (t.board || "").trim() === boardFilter);
-      }
-      if (statusFilter) {
-        filtered = filtered.filter(t => t.status === statusFilter);
-      }
-      if (searchQuery.trim()) {
-        const q = searchQuery.toLowerCase();
-        filtered = filtered.filter(t =>
-          t.title.toLowerCase().includes(q) ||
-          (t.board && t.board.toLowerCase().includes(q)) ||
-          (t.note && t.note.toLowerCase().includes(q))
-        );
-      }
-
-      // Sortering
-      if (sortBy === "date") {
-        filtered.sort((a, b) => (a.date || "9999-12-31").localeCompare(b.date || "9999-12-31"));
-      } else if (sortBy === "priority") {
-        const rank = { "Høj prioritet": 1, "Medium prioritet": 2, "Lav prioritet": 3, "": 4 };
-        filtered.sort((a, b) => (rank[a.priority || ""] || 4) - (rank[b.priority || ""] || 4));
-      }
-
-      content.innerHTML = `
-        <div class="view-header">
-          <div>
-            <h2 class="view-title">${title}</h2>
-            <p class="view-subtitle">${subtitle}</p>
-          </div>
-          <div class="header-actions">
-            <button class="report-btn" onclick="copyStatusReport()" title="Kopiér pæn statusoversigt til Outlook eller Teams">📋 Kopiér status</button>
-            <input type="text" class="search-bar" placeholder="Søg i opgaver & noter..." value="${escapeHtml(searchQuery)}" oninput="searchQuery = this.value; render();" />
-          </div>
-        </div>
-
-        <div class="filter-strip">
-          <div class="filter-chips">
-            <button class="filter-chip ${!boardFilter && !statusFilter ? "active" : ""}" onclick="boardFilter=''; statusFilter=''; render();">Alle (${baseList.length})</button>
-            <button class="filter-chip ${statusFilter === 'Venter' ? "active" : ""}" onclick="statusFilter = statusFilter === 'Venter' ? '' : 'Venter'; render();">Venter</button>
-            <button class="filter-chip ${statusFilter === 'Igangsat' ? "active" : ""}" onclick="statusFilter = statusFilter === 'Igangsat' ? '' : 'Igangsat'; render();">Igangsat</button>
-            ${boards.map(b => `
-              <button class="filter-chip ${boardFilter === b ? "active" : ""}" onclick="boardFilter = boardFilter === '${b.replace(/'/g, "\\'")}' ? '' : '${b.replace(/'/g, "\\'")}'; render();">${escapeHtml(b)}</button>
-            `).join("")}
-          </div>
-
-          <select class="mini-select" onchange="sortBy = this.value; render();" title="Sortering">
-            <option value="date" ${sortBy === "date" ? "selected" : ""}>Sortér: Nærmeste dato</option>
-            <option value="priority" ${sortBy === "priority" ? "selected" : ""}>Sortér: Prioritet</option>
-            <option value="manual" ${sortBy === "manual" ? "selected" : ""}>Sortér: Senest oprettet</option>
-          </select>
-        </div>
-
-        <div class="task-list">
-          ${filtered.length === 0 ? `<div class="empty-state">Ingen opgaver matcher det valgte filter.</div>` : filtered.map(task => {
-            const cat = state.categories.find(c => c.id === task.categoryId) || state.categories[0];
-            const statusClass = task.status === "Venter" ? "status-venter" : "";
-            const prioClass = task.priority && task.priority.includes("Høj") ? "prio-høj" : (task.priority && task.priority.includes("Medium") ? "prio-medium" : "");
-            const due = !task.done ? getDueInfo(task.date) : null;
-            const hasNote = task.note && task.note.trim().length > 0;
-            const noteOpen = !!openNotes[task.id] || hasNote;
-
-            return `
-              <div class="task-row ${task.done ? "done" : ""}">
-                <div class="task-left">
-                  <button class="check-circle" onclick="toggleDone('${task.id}')" title="Markér som udført">✓</button>
-                  <div class="task-content">
-                    <div class="task-title-line">
-                      <div class="task-title" contenteditable="true" onblur="updateTaskTitle('${task.id}', this.textContent)" onkeydown="if(event.key==='Enter'){event.preventDefault(); this.blur();}">${escapeHtml(task.title)}</div>
-                      ${due ? `<span class="due-badge ${due.type === 'overdue' ? 'due-overdue' : 'due-soon'}">${due.label}</span>` : ""}
-                    </div>
-
-                    <div class="task-meta">
-                      <label class="inline-meta-field" title="Ret tavlenavn">
-                        <span class="inline-meta-label">Tavle:</span>
-                        <input type="text" class="inline-board-input" value="${escapeHtml(task.board)}" placeholder="Ingen" onchange="updateTaskField('${task.id}', 'board', this.value.trim())" onkeydown="if(event.key==='Enter') this.blur()" />
-                      </label>
-
-                      <label class="inline-meta-field ${statusClass}" title="Skift status">
-                        <select class="inline-select" onchange="updateTaskField('${task.id}', 'status', this.value)">
-                          <option value="Igangsat" ${task.status === "Igangsat" ? "selected" : ""}>Igangsat</option>
-                          <option value="Venter" ${task.status === "Venter" ? "selected" : ""}>Venter</option>
-                        </select>
-                      </label>
-
-                      <span class="inline-meta-field" title="Vælg ny dato eller udsæt +1 uge">
-                        <span class="inline-meta-label">Dato:</span>
-                        <input type="date" class="inline-date-input" value="${task.date || ""}" onchange="updateTaskField('${task.id}', 'date', this.value)" />
-                        <button type="button" class="plus-week-btn" onclick="postponeOneWeek('${task.id}')" title="Udsæt frist 7 dage">+7d</button>
-                      </span>
-
-                      <label class="inline-meta-field ${prioClass}" title="Skift prioritet">
-                        <select class="inline-select" onchange="updateTaskField('${task.id}', 'priority', this.value)">
-                          <option value="" ${!task.priority ? "selected" : ""}>Ingen prioritet</option>
-                          <option value="Høj prioritet" ${task.priority === "Høj prioritet" ? "selected" : ""}>Høj prioritet</option>
-                          <option value="Medium prioritet" ${task.priority === "Medium prioritet" ? "selected" : ""}>Medium prioritet</option>
-                          <option value="Lav prioritet" ${task.priority === "Lav prioritet" ? "selected" : ""}>Lav prioritet</option>
-                        </select>
-                      </label>
-
-                      <button type="button" class="note-toggle-btn ${hasNote ? "has-note" : ""}" onclick="toggleNoteBox('${task.id}')">
-                        ${hasNote ? "📝 Note" : "+ Note"}
-                      </button>
-                    </div>
-
-                    ${noteOpen ? `
-                      <textarea class="task-note-box" placeholder="Skriv næste skridt, aftale eller afklaring her..." oninput="updateTaskField('${task.id}', 'note', this.value)">${escapeHtml(task.note)}</textarea>
-                    ` : ""}
-                  </div>
-                </div>
-                <div class="task-right">
-                  <select class="row-cat-select" style="border-left: 4px solid ${cat.color}" onchange="updateTaskField('${task.id}', 'categoryId', this.value)">
-                    ${state.categories.map(c => `<option value="${c.id}" ${c.id === task.categoryId ? "selected" : ""}>${c.name}</option>`).join("")}
-                  </select>
-                  <button class="delete-btn" onclick="deleteTask('${task.id}')" title="Slet opgave">✕</button>
-                </div>
-              </div>
-            `;
-          }).join("")}
-        </div>
-      `;
-    }
-
-    function exportJSON() {
-      const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `change-master-backup-${new Date().toISOString().slice(0, 10)}.json`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function importJSON(event) {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = e => {
-        try {
-          const imported = JSON.parse(e.target.result);
-          if (imported.categories && imported.tasks) {
-            state = imported;
-            saveState();
-            render();
-            showToast("Backup indlæst!");
-          }
-        } catch (err) {
-          alert("Kunne ikke læse JSON-filen.");
+    /* DRAG & DROP */
+    function onDragOver(e) { e.preventDefault(); e.currentTarget.classList.add("drag-over"); }
+    function onDragLeave(e) { e.currentTarget.classList.remove("drag-over"); }
+    function onDropDay(e, day) {
+        e.preventDefault();
+        e.currentTarget.classList.remove("drag-over");
+        if (draggedId) {
+            updateField(draggedId, "plannedDay", day);
+            draggedId = null;
         }
-      };
-      reader.readAsText(file);
-      event.target.value = "";
     }
 
-    function toggleSidebar(e) {
-      e.stopPropagation();
-      document.getElementById("sidebar").classList.toggle("open");
+    /* MODAL */
+    function openNewModal() {
+        const id = "t_" + Date.now();
+        tasks.unshift({
+            id, name: "Ny opgave", area: "Forankring & Drift", responsible: true,
+            status: "Igangsat", priority: "Mellem", date: new Date().toISOString().split("T")[0],
+            pct: 0, note: "", isFrog: false, plannedDay: "Mandag-onsdag", subtasks: []
+        });
+        openEditModal(id);
     }
 
-    function closeSidebarOnOutsideClick(e) {
-      const sb = document.getElementById("sidebar");
-      if (sb.classList.contains("open") && !sb.contains(e.target)) {
-        sb.classList.remove("open");
-      }
+    function openEditModal(id) {
+        const t = tasks.find(x => x.id === id);
+        if (!t) return;
+        editId = id;
+        modalSubs = JSON.parse(JSON.stringify(t.subtasks || []));
+
+        document.getElementById("mName").value = t.name;
+        document.getElementById("mArea").value = AREAS.includes(t.area) ? t.area : "Forankring & Drift";
+        document.getElementById("mDay").value = t.plannedDay || "Ikke planlagt";
+        document.getElementById("mPrio").value = t.priority;
+        document.getElementById("mStatus").value = t.status;
+        document.getElementById("mDate").value = t.date;
+        document.getElementById("mPct").value = t.pct || 0;
+        document.getElementById("mNote").value = t.note || "";
+
+        renderSubList();
+        document.getElementById("editModal").classList.add("open");
     }
 
-    applyFontScale();
-    updatePillUI("Standard");
-    render();
-  </script>
+    function closeModal() {
+        document.getElementById("editModal").classList.remove("open");
+        editId = null;
+    }
+
+    function renderSubList() {
+        document.getElementById("mSubList").innerHTML = modalSubs.map((s, i) => `
+            <div class="sub-row">
+                <input type="checkbox" ${s.done ? "checked" : ""} onchange="toggleSub(${i}, this.checked)">
+                <input type="text" value="${esc(s.title)}" oninput="modalSubs[${i}].title=this.value" placeholder="Delopgave...">
+                <button class="icon-btn del" onclick="modalSubs.splice(${i},1); renderSubList();"><svg class="icon"><use href="#i-trash"/></svg></button>
+            </div>
+        `).join("");
+    }
+
+    function addSubItem() {
+        modalSubs.push({ title: "", done: false });
+        renderSubList();
+    }
+
+    function toggleSub(i, checked) {
+        modalSubs[i].done = checked;
+        if (modalSubs.length) {
+            const pct = Math.round((modalSubs.filter(s => s.done).length / modalSubs.length) * 100);
+            document.getElementById("mPct").value = pct;
+            if (pct === 100) document.getElementById("mStatus").value = "Fuldført";
+        }
+    }
+
+    function saveModal() {
+        const t = tasks.find(x => x.id === editId);
+        if (!t) return;
+        t.name = document.getElementById("mName").value.trim() || "Opgave";
+        t.area = document.getElementById("mArea").value;
+        t.plannedDay = document.getElementById("mDay").value;
+        t.priority = document.getElementById("mPrio").value;
+        t.status = document.getElementById("mStatus").value;
+        t.date = document.getElementById("mDate").value;
+        t.pct = Math.max(0, Math.min(100, parseInt(document.getElementById("mPct").value) || 0));
+        if (t.status === "Fuldført") t.pct = 100;
+        t.note = document.getElementById("mNote").value;
+        t.subtasks = modalSubs.filter(s => s.title.trim() !== "");
+
+        persist();
+        closeModal();
+        renderAll();
+    }
+
+    function deleteFromModal() {
+        if (!editId) return;
+        const id = editId;
+        closeModal();
+        deleteTask(id);
+    }
+
+    /* TIMER */
+    function toggleTimer() {
+        const box = document.getElementById("timerBox");
+        const btn = document.getElementById("timerBtn");
+        if (timerRunning) {
+            clearInterval(timerInt);
+            timerRunning = false;
+            box.classList.remove("running");
+            btn.innerText = "Start";
+        } else {
+            timerRunning = true;
+            box.classList.add("running");
+            btn.innerText = "Pause";
+            timerInt = setInterval(() => {
+                if (timerSec > 0) {
+                    timerSec--;
+                    const m = String(Math.floor(timerSec / 60)).padStart(2, "0");
+                    const s = String(timerSec % 60).padStart(2, "0");
+                    document.getElementById("timerClock").innerText = `${m}:${s}`;
+                } else {
+                    resetTimer();
+                    alert("Fokus-tid slut!");
+                }
+            }, 1000);
+        }
+    }
+
+    function resetTimer() {
+        clearInterval(timerInt);
+        timerRunning = false;
+        timerSec = 25 * 60;
+        document.getElementById("timerBox").classList.remove("running");
+        document.getElementById("timerBtn").innerText = "Start";
+        document.getElementById("timerClock").innerText = "25:00";
+    }
+
+    /* BACKUP */
+    function exportJson() {
+        const blob = new Blob([JSON.stringify(tasks, null, 2)], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `ChangeMaster_LommeLog_${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    }
+
+    function importJson(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+        const r = new FileReader();
+        r.onload = (ev) => {
+            try {
+                const data = JSON.parse(ev.target.result);
+                if (Array.isArray(data)) {
+                    tasks = data;
+                    tasks.forEach(t => { if (!t.area) t.area = detectAreaFromText(t.name); });
+                    persist();
+                    renderAll();
+                }
+            } catch { alert("Fejl ved indlæsning af JSON."); }
+        };
+        r.readAsText(file);
+    }
+
+    function esc(str) {
+        return String(str || "").replace(/[&<>"']/g, m => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[m]));
+    }
+
+    init();
+</script>
 </body>
 </html>
